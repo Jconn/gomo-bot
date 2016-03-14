@@ -1,8 +1,11 @@
 #include "Gomoku.h"
 #include <iostream>
 
-int main(int argc, const char * argv[]) {
+int main() {
   std::cout << "everyone suffers\n";
+  
+  Gomoku game;
+
   return 0;
 }
 
