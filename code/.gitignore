@@ -5,3 +5,7 @@ CMakeScripts
 Makefile
 cmake_install.cmake
 install_manifest.txt
+
+
+## random files jt's computer generates
+.Gomoku.cpp.swp
