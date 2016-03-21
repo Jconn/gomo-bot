@@ -68,6 +68,3 @@ test6: fiveAntiDiagonallyTest1.cpp
 
 clean:
 	rm -rf *.o Gomoku test1 test1-1 test2 test2-1 test 2-2 test3 test4 test4-1 test4-2 test5 test5-1 test6
-=======
-#
->>>>>>> origin/master
