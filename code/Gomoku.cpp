@@ -1,34 +1,54 @@
-#include "Gomoku.h"
-<<<<<<< Updated upstream
-#include <iostream>
-=======
 #include <iostream> // cout, cin
+#include <vector>   // vector
+#include "Gomoku.h"
+#include "Coordinate.h"
 
->>>>>>> Stashed changes
 int main() {
-  std::cout << "everyone suffers\n";
   
   Gomoku game;
+  std::vector<Coordinate> unoccupied_spaces;
 
-
-
-  //TODO: handle human vs. AI going first
-  //TODO: handle human assignment to black or white
-
-  while(!game.getGameEnded() && !game.isDraw()) {
-    // get the move of human opponent
-    game.getHumanMove();
-
-
-
-    // determine the move of    
-
-    // check if game is a draw
-    if(game.isDraw())
-      game.setGameEnded(true);
+  // initialize the vector
+  for(int i = 0; i < GRID_LENGTH; ++i) {
+    for(int j = 0; j < GRID_LENGTH; ++j) {
+      Coordinate a(i,j);
+      unoccupied_spaces.push_back(a);
+    }
   }
 
+  Coordinate mostRecentMove(0,0);
 
+  while(!game.getGameEnded() && !game.isDraw()) {
+
+    mostRecentMove = game.getHumanMove();
+    game.printGameState();
+  
+    // check if game is won 
+    if(game.winningMove(mostRecentMove)) {
+      std::cout << "a player wins!\n"; // TODO: update this
+      game.setGameEnded();
+      break;
+    }
+    
+    // check if game is a draw
+    if(game.isDraw())
+      game.setGameEnded();
+
+
+    mostRecentMove = game.getRandomAIMove();
+    // check if game is won 
+    if(game.winningMove(mostRecentMove)) {
+      std::cout << "a player wins!\n"; // TODO: update this
+      game.setGameEnded();
+      break;
+    }
+    // check if game is a draw
+    if(game.isDraw())
+      game.setGameEnded();
+
+  game.printGameState();
+   
+  }
+  std::cout << "program ending\n";
   return 0;
 }
-
