@@ -20,7 +20,7 @@ int main() {
 
   while(!game.getGameEnded() && !game.isDraw()) {
 
-    mostRecentMove = game.getHumanMove();
+    mostRecentMove = game.getHumanMove(unoccupied_spaces);
     game.printGameState();
   
     // check if game is won 
@@ -34,8 +34,7 @@ int main() {
     if(game.isDraw())
       game.setGameEnded();
 
-
-    mostRecentMove = game.getRandomAIMove();
+    mostRecentMove = game.getRandomAIMove(unoccupied_spaces);
     // check if game is won 
     if(game.winningMove(mostRecentMove)) {
       std::cout << "a player wins!\n"; // TODO: update this
@@ -49,6 +48,7 @@ int main() {
   game.printGameState();
    
   }
+
   std::cout << "program ending\n";
   return 0;
 }

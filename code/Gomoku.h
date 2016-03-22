@@ -6,27 +6,31 @@
 #include <stdlib.h>      // srand, rand 
 #include <cassert>       // assert
 #include <vector>        // vector
+#include <algorithm>     // remove
 #include "Coordinate.h"
 #include "Constants.h"
 #include "MoveType.h"
 
 using namespace std;
+
 struct spot{
   MoveType owner;
   Coordinate topLeft;
   Coordinate topRight;
   Coordinate botLeft;
   Coordinate botRight;
+
   spot(){
     owner = blank;
   }
+
 };
+
 class Gomoku{
 
   int numMovesPlayed;
   bool winnerDetermined;
   spot board[GRID_LENGTH][GRID_LENGTH]; // (0,0) corresponds to the top left of the board
-  
    
   // 2 ways to be true:
   // (1) before all grid squares are filled, one player gets 5 in a row
@@ -36,7 +40,7 @@ class Gomoku{
   public:
     Gomoku();
 
-    Coordinate getHumanMove();
+    Coordinate getHumanMove(vector<Coordinate>& us);
     //void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
     int getNumMovesPlayed() const {return numMovesPlayed;}
     void incrementNumMovesPlayed() {numMovesPlayed++;}
@@ -47,7 +51,7 @@ class Gomoku{
     bool getGameEnded() const {return gameEnded;}
     void setGameEnded() {gameEnded = true;}
 
-    Coordinate getRandomAIMove();
+    Coordinate getRandomAIMove(vector<Coordinate>& us);
 
     bool isDraw();
 
@@ -81,6 +85,10 @@ class Gomoku{
     void printGameState();
 };
 
+bool operator==(const Coordinate& lhs, const Coordinate& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
 
 Gomoku::Gomoku() {
   // initialize all board values to blank
@@ -93,7 +101,7 @@ Gomoku::Gomoku() {
   gameEnded = false;
 }
 
-Coordinate Gomoku::getHumanMove() {
+Coordinate Gomoku::getHumanMove(vector<Coordinate>& us) {
   Coordinate coord(0,0);
 
   std::cout << "Where would you like to move? Enter the horizontal coordinate in [1,18].\n";
@@ -101,7 +109,11 @@ Coordinate Gomoku::getHumanMove() {
 
   std::cout << "Where would you like to move? Enter the vertical coordinate in [1,18].\n";
   std::cin >> coord.y;
- 
+
+  us.pop_back();
+
+  us.erase(std::remove(us.begin(), us.end(), coord), us.end());
+
   MoveType proposedMoveType = board[coord.x][coord.y].owner;
 
   if(proposedMoveType == blank)
@@ -116,18 +128,21 @@ Coordinate Gomoku::getHumanMove() {
   return coord;
 }
 
-// TODO: this method is horrid, fix it
-// have a vector of all remaining places, generate an index
-Coordinate Gomoku::getRandomAIMove() {
+
+Coordinate Gomoku::getRandomAIMove(vector<Coordinate>& us) {
   Coordinate coord(0,0);
+  
+  int rand_vec_idx = 0;
 
   srand(time(NULL));
   
   while(1) {
-    coord.x = rand() % 18 + 1;
+    rand_vec_idx = rand() % us.size(); 
 
-    coord.y = rand() % 18 + 1;
-    
+    coord = us[rand_vec_idx];
+
+    us.erase(std::remove(us.begin(), us.end(), coord), us.end());
+
     if(board[coord.x][coord.y].owner == blank) {
       std::cout << "random AI moves to " << coord.x << ", " << coord.y << "\n";
       board[coord.x][coord.y].owner = AI_COLOR;
@@ -139,14 +154,13 @@ Coordinate Gomoku::getRandomAIMove() {
   return coord;
 }
 
+
 bool Gomoku::isDraw() {
   if(numMovesPlayed == GRID_LENGTH * GRID_LENGTH && !winnerDetermined)
     return true;
   else
     return false;
 }
-
-
 
 bool Gomoku::winningMove(Coordinate most_recent_move) {
   if(fiveHorizontally(most_recent_move)      || fiveVertically(most_recent_move)
@@ -205,8 +219,6 @@ void Gomoku::checkRightOfMove(Coordinate coord, int& num_tiles_in_a_row) {
     num_tiles_inspected++;
   }
 }
-
-
 
 bool Gomoku::fiveVertically(Coordinate coord) {
   int num_tiles_in_a_row = 1;  // if this == 5, the game is won!
@@ -395,7 +407,7 @@ void Gomoku::printGameState() {
   }
 }
 
-//void Gomoku::observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]){
+//void Gomoku::observeBoaint (*gameState)[GRID_LENGTH][GRID_LENGTH]){
 
 
 //}
