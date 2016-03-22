@@ -1,6 +1,6 @@
 CC = g++
 
-OPENCV_LIBS = -L/usr/local/lib -lopencv_shape -lopencv_stitching -lopencv_objdetect -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_ml -lopencv_imgproc -lopencv_flann -lopencv_core -lopencv_hal
+OPENCV_LIBS = -L/usr/local/lib -lopencv_shape -lopencv_stitching -lopencv_objdetect -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_ml -lopencv_imgproc -lopencv_flann -lopencv_core 
 
 LIBS = $(OPENCV_LIBS)
 
@@ -12,12 +12,12 @@ default: main
 
 
 main: Gomoku.cpp Gomoku.h
-	$(CC) $(CFLAGS) Gomoku.cpp -o $@
+	$(CC) $(CFLAGS) Gomoku.cpp -o $@ $(LIBS)
 
 ####### fiveHorizontally tests
 # left side, win, most recent = leftmost
-test1: fiveHorizontallyTest1.cpp 
-	$(CC) $(CFLAGS) fiveHorizontallyTest1.cpp -o $@
+test1: tests/fiveHorizontallyTest1.cpp 
+	$(CC) $(CFLAGS) tests/fiveHorizontallyTest1.cpp -o $@
 
 # left side, no win, most recent = leftmost 
 test1-1: fiveHorizontallyTest1-1.cpp

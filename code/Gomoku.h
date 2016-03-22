@@ -9,8 +9,20 @@
 #include "Coordinate.h"
 #include "Constants.h"
 #include "MoveType.h"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+
 
 using namespace std;
+using namespace cv;
+
+struct compositeCircle{
+  Vec3i circle;
+  int numCombines;
+  MoveType color;
+};
+
 struct spot{
   MoveType owner;
   Coordinate topLeft;
@@ -26,59 +38,59 @@ class Gomoku{
   int numMovesPlayed;
   bool winnerDetermined;
   spot board[GRID_LENGTH][GRID_LENGTH]; // (0,0) corresponds to the top left of the board
-  
-   
+
+
   // 2 ways to be true:
   // (1) before all grid squares are filled, one player gets 5 in a row
   // (2) all grid squares filled without a player getting 5 in a row
   bool gameEnded; 
-
+  bool withinRegion( Coordinate point, spot curSpot);
   public:
-    Gomoku();
+  Gomoku();
 
-    Coordinate getHumanMove();
-    //void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
-    int getNumMovesPlayed() const {return numMovesPlayed;}
-    void incrementNumMovesPlayed() {numMovesPlayed++;}
+  Coordinate getHumanMove();
+  void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
+  int getNumMovesPlayed() const {return numMovesPlayed;}
+  void incrementNumMovesPlayed() {numMovesPlayed++;}
+  void populateBoard(vector<compositeCircle> knownCircles);
+  bool getWinnerDetermined() const {return winnerDetermined;}
+  void setWinnerDetermined() {winnerDetermined = true;}
 
-    bool getWinnerDetermined() const {return winnerDetermined;}
-    void setWinnerDetermined() {winnerDetermined = true;}
+  bool getGameEnded() const {return gameEnded;}
+  void setGameEnded() {gameEnded = true;}
 
-    bool getGameEnded() const {return gameEnded;}
-    void setGameEnded() {gameEnded = true;}
+  Coordinate getRandomAIMove();
 
-    Coordinate getRandomAIMove();
+  bool isDraw();
 
-    bool isDraw();
+  //////////////////////////////////////////////////////////////////////////////////
+  // start winningMove functions
+  //////////////////////////////////////////////////////////////////////////////////
+  bool winningMove(Coordinate most_recent_move);
 
-    //////////////////////////////////////////////////////////////////////////////////
-    // start winningMove functions
-    //////////////////////////////////////////////////////////////////////////////////
-    bool winningMove(Coordinate most_recent_move);
-    
-    bool fiveHorizontally(Coordinate coord);
-    void checkLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
-    void checkRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
+  bool fiveHorizontally(Coordinate coord);
+  void checkLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
+  void checkRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
 
-    bool fiveVertically(Coordinate coord);
-    void checkAboveMove(Coordinate coord, int& num_tiles_in_a_row);
-    void checkBelowMove(Coordinate coord, int& num_tiles_in_a_row);
+  bool fiveVertically(Coordinate coord);
+  void checkAboveMove(Coordinate coord, int& num_tiles_in_a_row);
+  void checkBelowMove(Coordinate coord, int& num_tiles_in_a_row);
 
-    bool fiveDiagonally(Coordinate coord);
-    void checkAboveAndRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
-    void checkBelowAndLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
+  bool fiveDiagonally(Coordinate coord);
+  void checkAboveAndRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
+  void checkBelowAndLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
 
-    bool fiveAntiDiagonally(Coordinate coord);
-    void checkAboveAndLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
-    void checkBelowAndRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
+  bool fiveAntiDiagonally(Coordinate coord);
+  void checkAboveAndLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
+  void checkBelowAndRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
 
-    //////////////////////////////////////////////////////////////////////////////////
-    // end winningMove functions
-    //////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////
+  // end winningMove functions
+  //////////////////////////////////////////////////////////////////////////////////
 
-    // testing functions
-    void setMove(int x, int y, MoveType type);
-    void printGameState();
+  // testing functions
+  void setMove(int x, int y, MoveType type);
+  void printGameState();
 };
 
 
@@ -101,7 +113,7 @@ Coordinate Gomoku::getHumanMove() {
 
   std::cout << "Where would you like to move? Enter the vertical coordinate in [1,18].\n";
   std::cin >> coord.y;
- 
+
   MoveType proposedMoveType = board[coord.x][coord.y].owner;
 
   if(proposedMoveType == blank)
@@ -122,12 +134,12 @@ Coordinate Gomoku::getRandomAIMove() {
   Coordinate coord(0,0);
 
   srand(time(NULL));
-  
+
   while(1) {
     coord.x = rand() % 18 + 1;
 
     coord.y = rand() % 18 + 1;
-    
+
     if(board[coord.x][coord.y].owner == blank) {
       std::cout << "random AI moves to " << coord.x << ", " << coord.y << "\n";
       board[coord.x][coord.y].owner = AI_COLOR;
@@ -150,7 +162,7 @@ bool Gomoku::isDraw() {
 
 bool Gomoku::winningMove(Coordinate most_recent_move) {
   if(fiveHorizontally(most_recent_move)      || fiveVertically(most_recent_move)
-     || fiveDiagonally(most_recent_move)     || fiveAntiDiagonally(most_recent_move))
+      || fiveDiagonally(most_recent_move)     || fiveAntiDiagonally(most_recent_move))
     return true;
   else
     return false;
@@ -179,7 +191,7 @@ void Gomoku::checkLeftOfMove(Coordinate coord, int& num_tiles_in_a_row) {
   MoveType current_coord_move_type = board[current_coord.x][current_coord.y].owner; 
 
   while(current_coord.isValid() && current_coord_move_type == type && num_tiles_inspected <= MAX_TILES_PER_DIRECTION) {
-    
+
     // after we've made sure the next coordinate is valid, we can safely index to that space
     num_tiles_in_a_row++;
     current_coord.y--;            // TODO: adjust for each function
@@ -232,7 +244,7 @@ void Gomoku::checkAboveMove(Coordinate coord, int& num_tiles_in_a_row) {
   MoveType current_coord_move_type = board[current_coord.x][current_coord.y].owner; 
 
   while(current_coord.isValid() && current_coord_move_type == type && num_tiles_inspected <= MAX_TILES_PER_DIRECTION) {
-    
+
     // after we've made sure the next coordinate is valid, we can safely index to that space
 
     num_tiles_in_a_row++;
@@ -285,7 +297,7 @@ void Gomoku::checkAboveAndRightOfMove(Coordinate coord, int& num_tiles_in_a_row)
   MoveType current_coord_move_type = board[current_coord.x][current_coord.y].owner; 
 
   while(current_coord.isValid() && current_coord_move_type == type && num_tiles_inspected <= MAX_TILES_PER_DIRECTION) {
-    
+
     // after we've made sure the next coordinate is valid, we can safely index to that space
 
     num_tiles_in_a_row++;
@@ -342,7 +354,7 @@ void Gomoku::checkAboveAndLeftOfMove(Coordinate coord, int& num_tiles_in_a_row) 
   MoveType current_coord_move_type = board[current_coord.x][current_coord.y].owner; 
 
   while(current_coord.isValid() && current_coord_move_type == type && num_tiles_inspected <= MAX_TILES_PER_DIRECTION) {
-    
+
     // after we've made sure the next coordinate is valid, we can safely index to that space
 
     num_tiles_in_a_row++;
@@ -381,7 +393,7 @@ void Gomoku::printGameState() {
   for(int i = 0; i < GRID_LENGTH; ++i) {
     for(int j = 0; j < GRID_LENGTH; ++j) {
       MoveType currentMove = board[i][j].owner;
-      
+
       if(currentMove == black) {
         std::cout << "B ";
 
@@ -396,9 +408,43 @@ void Gomoku::printGameState() {
 }
 
 //void Gomoku::observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]){
-
-
+//  
 //}
 
+
+void Gomoku::populateBoard(vector<compositeCircle> knownCircles){
+  //TODO: observe previous gamestate, and make sure the delta is only 1 
+  //spot prevBoard[GRID_LENGTH][GRID_LENGTH];
+  Coordinate curCenter(-1,-1);
+  bool foundSpot = false;
+  for (unsigned int t = 0; t < knownCircles.size(); ++t){
+    foundSpot=false;
+    compositeCircle curCircle = knownCircles[t];
+    for(int i = 0; i < GRID_LENGTH; ++i){
+      for(int j = 0; j < GRID_LENGTH; ++j){
+        curCenter.x = curCircle.circle[0];
+        curCenter.y = curCircle.circle[1];
+        if(withinRegion(curCenter,board[i][j]))
+        {
+          board[i][j].owner = curCircle.color;
+          foundSpot = true;
+        }
+      }
+      if(foundSpot)
+        break;
+    }
+    if(foundSpot)
+      break;
+  }
+}
+
+bool Gomoku::withinRegion( Coordinate point, spot curSpot){
+  if(point.x > curSpot.topLeft.x && point.x < curSpot.topRight.x){
+    if(point.y >curSpot.topLeft.y && point.y < curSpot.botRight.y){
+      return true;
+    }
+  }
+  return false;
+}
 
 #endif // GOMOKU_H

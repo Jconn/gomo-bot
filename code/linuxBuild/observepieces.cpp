@@ -4,18 +4,14 @@
 #include <math.h>
 #include <iostream>
 #include "../MoveType.h"
+#include "../Gomoku.h"
 using namespace cv;
 using namespace std;
 static const Size dispSize(640, 480);
 static const Size inputSize(1024, 860);
 
 
-struct compositeCircle{
-  Vec3i circle;
-  int numCombines;
-  MoveType color;
 
-};
 static void help()
 {
   cout << "\nThis program demonstrates circle finding with the Hough transform.\n"
