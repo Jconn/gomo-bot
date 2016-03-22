@@ -11,6 +11,9 @@ observe: observepieces.cpp
 	$(CC) $(CFLAGS) observepieces.cpp -o $@ $(LIBS)
 grid: hough_lines.cpp
 	$(CC) $(CFLAGS) hough_lines.cpp -o $@ $(LIBS)
+fill: grid_fill.cpp
+	$(CC) $(CFLAGS) grid_fill.cpp -o $@ $(LIBS)
+
 
 clean:
 	rm -rf *.o svm test

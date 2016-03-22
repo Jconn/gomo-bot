@@ -6,6 +6,7 @@
 
 using namespace cv;
 using namespace std;
+using cv::CLAHE;
 static const Size finalSize(640, 480);
 
 
@@ -17,7 +18,7 @@ static void help()
 }
 
 
-int main(int argc, char** argv)
+vector<Point2f> detect_corner(int argc, char** argv)
 {
   cv::CommandLineParser parser(argc, argv,
       "{help h ||}{@image|../data/board.jpg|}"
@@ -25,91 +26,92 @@ int main(int argc, char** argv)
   if (parser.has("help"))
   {
     help();
-    return 0;
+    exit(EXIT_FAILURE);
   }
   string filename = parser.get<string>("@image");
   if (filename.empty())
   {
     help();
     cout << "no image_name provided" << endl;
-    return -1;
+    exit(EXIT_FAILURE);
   }
   
   Mat src, dst, dst2, color_dst, mask,tmp,sharp_im;
   if( argc != 2 || !(src=imread(argv[1], 0)).data)
-      return -1;
+      exit(EXIT_FAILURE);
  
-  Canny( src, dst, 100, 100*3, 3);
-  cvtColor( dst, color_dst, CV_GRAY2BGR );
-
-  //resize(src,src,finalSize);
-  //imshow("Original",src);
-
-  //cvtColor(src, src, CV_BGR2GRAY);
-  //blur(src,src,Size(3,3));
-  //adaptiveThreshold(src, src, 100, ADAPTIVE_THRESH_GAUSSIAN_C, THRESH_BINARY,11,2);
-  //resize(src,src,finalSize);
-  //imshow("Threshold",src);
-  
+    cvtColor( dst, color_dst, CV_GRAY2BGR );
 /*
-  namedWindow("original",1);
+  //display original image
   resize(src,tmp,finalSize);
-  imshow("original",tmp);
+  imshow("Original Image",tmp);
+*/
+  //blur and sharpen image 
+  medianBlur(src,src, 11); 
+  Ptr<CLAHE> clahe = createCLAHE();
+  clahe->setClipLimit(2);
+  clahe->apply(src,src);
+  src.convertTo(src,-1,1.5,-100);
 
-  tmp = 0;
-
-  GaussianBlur(src,tmp,Size(5,5), 5);
-  
-  addWeighted(src, 1.5, tmp, -0.5,0, src);
-  sharp_im = src;
-  namedWindow("Sharpened Image",1);
-  resize(sharp_im, sharp_im, finalSize);
+  sharp_im =src;
+/*
+  //display sharpened image
+  namedWindow("Sharpened Image", 1);
+  resize(sharp_im,sharp_im,finalSize);
   imshow("Sharpened Image", sharp_im);
 */
-
-  sharp_im = src; 
-  equalizeHist(src, sharp_im);
-  
-
-  namedWindow("sharpened image", 1);
-  resize(sharp_im,sharp_im,finalSize);
-  imshow("sharpened image", sharp_im);
-
+  //corner detection
   vector<Point2f>corners;
-  goodFeaturesToTrack(src,corners,370, 0.1, 50, mask, 18, 10, 0.1); //qualit = 0.1, min = 50
+  vector<Point2f>corners_x;
+  vector<Point2f>corners_y;
+  goodFeaturesToTrack(src,corners,370, 0.1, 50, mask, 18, 10, 0.1); 
 
   for(size_t i = 0; i < corners.size(); i++)
   {
 	circle(src, corners[i], 10, Scalar(255.), -1);
   }
-
+/*
+  //display detected corners
   namedWindow("Corners",1);
   resize(src, src, finalSize);
   imshow("Corners", src);
-
-
-
-  //namedWindow("Edges",1);
-  //resize(dst,dst2,finalSize);
-  //imshow("Edges",dst2);
-
-  vector<Vec4i> lines;
-  HoughLinesP( dst, lines, 1, CV_PI/180, 50, 30, 10 );
-  for( size_t i = 0; i < lines.size(); i++ )
-  {
-      line( color_dst, Point(lines[i][0], lines[i][1]),
-          Point(lines[i][2], lines[i][3]), Scalar(0,0,255), 3, 8 );
-  }
-
- // namedWindow( "Source", 1 );
-  //resize(src,src,finalSize);
-  //imshow( "Source", src );
-
-  //namedWindow( "Detected Lines", 1 );
-  //resize(color_dst, color_dst, finalSize);
-  //imshow( "Detected Lines", color_dst );
-
-  waitKey(0);
-  return 0;
-}
+*/
+  // putting corners into useful format
+  //cout<< corners << endl;
+  //vector<Point2f>sorted_corners;
+  //sorted_corners = corners;
+  std::sort(corners.begin(), corners.end(), 
+	[](const cv::Point2f &a, const cv::Point2f &b){
+		return a.x < b.x;
+	});
+  corners_x = corners;
+  //cout << corners << endl;
+	
+  std::sort(corners.begin(), corners.end(), 
+	[](const cv::Point2f &a, const cv::Point2f &b){
+		return a.y < b.y;
+	});
+  corners_y = corners;
+  //cout << corners << " ";
   
+  waitKey(0);
+  return corners;
+};
+
+int main(int argc, char** argv){
+	vector<Point2f>corners;
+	corners = detect_corner(argc, argv);
+
+  	for(size_t i = 0; i < corners.size(); i++)
+  	{	
+		cout << corners[i] << endl;
+	}
+	
+
+	return 0;
+}
+
+
+
+
+
