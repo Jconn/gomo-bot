@@ -9,7 +9,7 @@ using namespace std;
 using cv::CLAHE;
 static const Size finalSize(640, 480);
 
-int MAX_DIFF_Y = 100;
+int MAX_DIFF_Y = 130;
 int MAX_DIFF_X = 20;
 
 struct Coordinate{
@@ -73,8 +73,8 @@ int main(int argc, char** argv)
     cvtColor( dst, color_dst, CV_GRAY2BGR );
 
   //display original image
-  //resize(src,tmp,finalSize);
-  //imshow("Original Image",tmp);
+  resize(src,tmp,finalSize);
+  imshow("Original Image",tmp);
 
   //blur and sharpen image 
   medianBlur(src,src, 11); 
@@ -102,9 +102,9 @@ int main(int argc, char** argv)
   }
 
   //display detected corners
-  //namedWindow("Corners",1);
-  //resize(src, src, finalSize);
-  //imshow("Corners", src);
+  namedWindow("Corners",1);
+  resize(src, src, finalSize);
+  imshow("Corners", src);
 
   // putting corners into useful format
   
@@ -143,35 +143,27 @@ int main(int argc, char** argv)
 
   Mat_<Point2f> grid(19,19, Point2f(0,0)) ;
   //Point2f starting_pt = corners_x[index];
-  Point2f prev = corners[index];
+  Point2f prev(0,0) ;
+  prev.x = corners_x[index].x;
+  prev.y = corners_x[index].y;
+  Point2f prev2(0,0);
   vector<Point2f> final_points;
-  Point2f extrap;
+  Point2f extrap(0,0);
+  Point2f last_point(9999,9999);
+  corners_x.push_back(last_point);
   //grid.at<Point2f>(0,0) = prev;
   //final_points.push_back(prev);
   int col = 0;
   int row = 0;
   for(size_t i = 0; i < corners_x.size(); i ++){
-cout << "Current: " << corners_x[i] << endl;
 	if((corners_x[i].x - prev.x) < MAX_DIFF_X){
-		if((corners_x[i].y - prev.y) < MAX_DIFF_Y){
-			if(prev.y < corners_x[i].y)
-				prev.x = corners_x[i].x;
-				prev.y = corners_x[i].y;
-			//grid.at<Point2f>(col,row) = prev;
-			final_points.push_back(corners_x[i]);
-			//row = row + 1;
-		}
-		else{
-			extrap.x = prev.x;
-			extrap.y = prev.y + 100;
-			//row = row + 1;
-			prev.x = extrap.x;
-			prev.y = extrap.y;
-			//grid.at<Point2f>(col,row) = prev;
-			final_points.push_back(prev);
-		}
+		final_points.push_back(corners_x[i]);
+		prev.x = corners_x[i].x;
+		prev.y = corners_x[i].y;
+cout << "Pushed Back Point: " << corners_x[i] << endl;
 	}
 	else{
+cout << "Point not pushed: " << corners_x[i] << endl;
 		prev.x = corners_x[i].x;
 		prev.y = corners_x[i].y;
 		//col = col + 1;
@@ -181,18 +173,45 @@ cout << "Current: " << corners_x[i] << endl;
 			[](const cv::Point2f &a, const cv::Point2f &b){
 				return a.y < b.y;
 		});
-		
-		for(size_t i = 0; i < final_points.size(); i++){
-			grid.at<Point2f>(col,row) = final_points[i];
-			row = row + 1;
+		prev2.x = final_points[0].x;
+		prev2.y = final_points[0].y;
+		for(size_t j = 0; j < final_points.size(); j++){ 
+cout << "Current Point: " << final_points[j] << "   Prev Point: " << prev2 << endl;
+			if((final_points[j].y - prev2.y) < MAX_DIFF_Y){
+				if(prev2.y < final_points[j].y){
+					prev2.x = final_points[j].x;
+					prev2.y = final_points[j].y;
+				}
+cout << "Point is in the right order: " << final_points[j] << endl;
+				grid.at<Point2f>(col,row) = final_points[j];
+				//final_points.push_back(corners_x[i]);
+				row = row + 1;
+			}
+			else{
+				extrap.x = prev2.x;
+				extrap.y = prev2.y + 100;
+				//row = row + 1;
+				prev2.x = extrap.x;
+				prev2.y = extrap.y;
+				j = j -1;
+				grid.at<Point2f>(col,row) = prev2;
+				row = row + 1;
+cout << "Extrapolated point: " << extrap << endl;
+				final_points.push_back(prev2);
+			}
+		/*
+			for(size_t i = 0; i < final_points.size(); i++){
+				grid.at<Point2f>(col,row) = final_points[i];
+				row = row + 1;
+			}*/
 		}
+
 		col = col + 1;
 		row = 0;
 		final_points.clear();
 		final_points.push_back(prev);
 		//grid.at<Point2f>(col,row) = prev;
 	}
-cout << "Prev: " << prev << endl;
   }
 
 
