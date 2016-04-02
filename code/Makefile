@@ -13,7 +13,8 @@ default: main
 
 main: Gomoku.cpp Gomoku.h
 	$(CC) $(CFLAGS) Gomoku.cpp -o $@ $(LIBS)
-
+ai: Gomoku.cpp threats.cpp main.cpp Coordinate.cpp Gomoku.h threats.h
+	$(CC) $(CFLAGS) Gomoku.cpp threats.cpp Coordinate.cpp main.cpp -o $@ 
 ####### fiveHorizontally tests
 # left side, win, most recent = leftmost
 test1: tests/fiveHorizontallyTest1.cpp 
