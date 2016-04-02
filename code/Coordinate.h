@@ -1,8 +1,9 @@
 #ifndef COORDINATE_H
 #define COORDINATE_H
 #include "Constants.h"
-
-
+#include <cassert>
+#include <iostream>
+enum Direction{diag=0,lr=1,ud=2,antidiag=3};
 struct Coordinate {
     int x;
     int y;
@@ -11,21 +12,20 @@ struct Coordinate {
 
     Coordinate(int x, int y);
     Coordinate();
-};
+    bool move(Direction moveDir, int numMoves,int mag);
+    bool decrement(Direction moveDir, int numMoves);
+    bool increment(Direction moveDir, int numMoves);
+    int movesFrom(Direction moveDir, Coordinate otherLoc);
 
-Coordinate::Coordinate(int a, int b) {
-  x = a;
-  y = b;
+};
+inline bool operator==(const Coordinate&  lhs, const Coordinate& rhs){
+
+  return ((lhs.x==rhs.x) && (lhs.y ==rhs.y));
 }
-Coordinate::Coordinate() {
-  x = -1; 
-  y = -1; 
+
+inline bool operator!=(const Coordinate&  lhs, const Coordinate& rhs){
+  return( !(lhs==rhs));
 }
-bool Coordinate::isValid() {
-  if(x > GRID_LENGTH || y > GRID_LENGTH || x < 0 || y < 0)
-    return false;
-  else
-    return true;
-}
+
 
 #endif // COORDINATE_H
