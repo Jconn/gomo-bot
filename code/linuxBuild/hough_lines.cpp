@@ -98,7 +98,7 @@ int main(int argc, char** argv)
 
   for(size_t i = 0; i < corners.size(); i++)
   {
-	circle(src, corners[i], 10, Scalar(0.), -1);
+	circle(src, corners[i], 10, Scalar(255.), -1);
   }
 
   //display detected corners
@@ -209,7 +209,15 @@ cout << "Extrapolated point: " << extrap << endl;
 		col = col + 1;
 		row = 0;
 		final_points.clear();
-		final_points.push_back(prev);
+		if(prev.y < MAX_DIFF_Y){
+			final_points.push_back(prev);
+		}
+		else{
+			extrap.x = prev.x;
+			extrap.y = prev.y - 100;
+			final_points.push_back(extrap);
+			final_points.push_back(prev);
+		}
 		//grid.at<Point2f>(col,row) = prev;
 	}
   }
