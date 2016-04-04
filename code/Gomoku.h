@@ -1,147 +1,93 @@
 #ifndef GOMOKU_H
 #define GOMOKU_H
-<<<<<<< Updated upstream
-#include <algorithm>
-#include <vector>
-#include <stdio.h>
-#include <iostream>
-#include <cassert>
+
+#include <iostream>      // cin, cout
+#include <time.h>        // time
+#include <stdlib.h>      // srand, rand 
+#include <cassert>       // assert
+#include <vector>        // vector
+#include <algorithm>     // remove
+#include "Coordinate.h"
+#include "Constants.h"
+#include "MoveType.h"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "threats.h"
+#include "Spot.h"
 using namespace std;
-=======
-#include <iostream>  // cin, cout
-#include <string>    // size, tolower
-#include <algorithm> // transform
-#include <cassert>   // assert
+using namespace cv;
 
->>>>>>> Stashed changes
-const int GRID_LENGTH = 18;
-
-// 'x' denotes that a player has moved in a grid square
-// 'o' denotes the other player has moved in a grid square
-// 'blank' denotes an empty grid
-enum Move {black, white, blank};
-
-<<<<<<< Updated upstream
-enum MoveType {computer=0, human=1, blank=2};
-
-class Loc{
-  public:
-    int x;
-    int y;
-    Loc(){
-      x=0;
-      y=0;
-    }
-    Loc(int xloc, int yloc){
-      x=xloc;
-      y=yloc;
-    }
+struct compositeCircle{
+  Vec3i circle;
+  int numCombines;
+  MoveType color;
 };
 
-class Gomoku{
-=======
-const Move PLAYER_COLOR = black;
-const Move AI_COLOR = white;
+enum AI{randomAI,defensive,offensive}; 
 
 class Gomoku{
-  
-  Move board[GRID_LENGTH][GRID_LENGTH];
+  MoveType myColor;
   int numMovesPlayed;
   bool winnerDetermined;
->>>>>>> Stashed changes
-
-  MoveType board[GRID_LENGTH][GRID_LENGTH];
-  int num_moves_played;
+  spot board[GRID_LENGTH][GRID_LENGTH]; // (0,0) corresponds to the top left of the board
+  vector <Coordinate> myMoves;
+  vector <Coordinate> openingPlaybook;
+  vector <Coordinate> enemyMoves;
+  // 2 ways to be true:
+  // (1) before all grid squares are filled, one player gets 5 in a row
+  // (2) all grid squares filled without a player getting 5 in a row
+  bool gameEnded; 
+  bool withinRegion( Coordinate point, spot curSpot);
+  AI myMode = defensive; 
+  void setAIMove(Coordinate &coord); 
   public:
-<<<<<<< Updated upstream
-  Loc getMove();
-  bool setMove(Loc move, MoveType player)
-  {
-    if(board[move.x][move.y] != blank){
-      cout <<"tried to move to occupied state" << endl;
-      assert(1);
-      return false; 
-    }
-    board[move.x][move.y] = player; 
-    return true;
-  }
+  Gomoku();
+  Coordinate getAIMove();
+  Coordinate getDefense();
+  void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
+  void populateBoard(vector<compositeCircle> knownCircles);
+  bool getWinnerDetermined() const {return winnerDetermined;}
+  void setWinnerDetermined() {winnerDetermined = true;}
+  Coordinate getHumanMove(vector<Coordinate>& us);
+  //void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
+  int getNumMovesPlayed() const {return numMovesPlayed;}
+  void incrementNumMovesPlayed() {numMovesPlayed++;}
+  Coordinate getAttack();
+  bool getGameEnded() const {return gameEnded;}
+  void setGameEnded() {gameEnded = true;}
   bool isDraw();
-  void AnalyzeAttacks();
-  int get_moves_played() const {return num_moves_played;}
-  void set_moves_played(int n) {num_moves_played = n;}
+  Coordinate getRandomAIMove(vector<Coordinate>& us);
+  void populatePlaybook();
+  bool isFree(Coordinate location); 
+  //////////////////////////////////////////////////////////////////////////////////
+  // start winningMove functions
+  //////////////////////////////////////////////////////////////////////////////////
+  bool winningMove(Coordinate most_recent_move);
 
-  Gomoku() {
-    num_moves_played = 0;
+  bool fiveHorizontally(Coordinate coord);
+  void checkLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
+  void checkRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
 
-    // initialize all board values to blank
-    for(int i = 0; i < GRID_LENGTH; i++) {
-      for (int j = 0; j < GRID_LENGTH; j++) {
-        board[i][j] = blank;
-      }
-    }
-  }
+  bool fiveVertically(Coordinate coord);
+  void checkAboveMove(Coordinate coord, int& num_tiles_in_a_row);
+  void checkBelowMove(Coordinate coord, int& num_tiles_in_a_row);
+
+  bool fiveDiagonally(Coordinate coord);
+  void checkAboveAndRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
+  void checkBelowAndLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
+
+  bool fiveAntiDiagonally(Coordinate coord);
+  void checkAboveAndLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
+  void checkBelowAndRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // end winningMove functions
+  //////////////////////////////////////////////////////////////////////////////////
+
+  // testing functions
+  void setMove(int x, int y, MoveType type);
+  void printGameState();
 };
-=======
-    void getHumanMove();
-    bool isDraw();
-    
-    int getNumMovesPlayed() const {return numMovesPlayed;}
-    void incrementNumMovesPlayed() {numMovesPlayed++;}
 
-
-    bool getWinnerDetermined() const {return winnerDetermined;}
-    void setWinnerDetermined() {winnerDetermined = true;}
-
-    Gomoku();
-
-};
-
-
-Gomoku::Gomoku() {
-      // initialize all board values to blank
-      for(int i = 0; i < GRID_LENGTH; i++) {
-        for (int j = 0; j < GRID_LENGTH; j++) {
-          board[i][j] = blank;
-        }
-      }
-      
-      numMovesPlayed = 0;
-      gameEnded = false;
-}
-
-void Gomoku::getHumanMove() {
-  
-  int horizCoord = 0;
-  int vertCoord = 0;
-
-  std::cout << "Where would you like to move? Enter the horizontal coordinate in [1,18].\n";
-  std::cin >> horizCoord;
-
-  std::cout << "Where would you like to move? Enter the vertical coordinate in [1,18].\n";
-  std::cin >> vertCoord;
- 
-  
-
-  /*
-  std::string moveCoord = "0";
-  std::cin >> moveCoord;
-  assert(moveCoord.size()  <= 3 && moveCoord.size() >= 2); // must be size 2 or 3
-  std::transform(moveCoord.begin(), moveCoord.end(), moveCoord.begin(), ::tolower);
-
-  std::cout << "moveCoord\n";
-  */
-  
-  incrementNumMovesPlayed();
-
-}
-
-bool Gomoku::isDraw() {
-
-  if(numMovesPlayed == GRID_LENGTH * GRID_LENGTH && !winnerDetermined)
-    return true;
-  else
-    return false;
-}
->>>>>>> Stashed changes
-
-#endif
+#endif // GOMOKU_H

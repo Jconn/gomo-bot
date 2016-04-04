@@ -18,6 +18,7 @@ static void help()
     "./houghcircles <image_name>, Default is ../data/board.jpg\n" << endl;
 }
 
+int const threshold_value = 100;
 
 int main(int argc, char** argv)
 {
@@ -89,6 +90,14 @@ int main(int argc, char** argv)
     Vec3i c = known_circles[i].circle;
     circle( cimg, Point(c[0], c[1]), c[2], Scalar(0,0,255), 3, LINE_AA);
     circle( cimg, Point(c[0], c[1]), 2, Scalar(0,255,0), 3, LINE_AA);
+  if(image.at<unsigned char>(c[0], c[1]) > threshold_value)
+            {
+                known_circles[i].color = white;
+            }
+            else {
+                known_circles[i].color = black;
+            }
+  
   }
   namedWindow( "imOutput", WINDOW_AUTOSIZE ); // Create a window for display.
 

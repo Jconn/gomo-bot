@@ -3,22 +3,21 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include <math.h>
 #include <iostream>
-
+#include "../MoveType.h"
+#include "../Gomoku.h"
 using namespace cv;
 using namespace std;
-static const Size finalSize(1024, 860);
-struct compositeCircle{
-  Vec3i circle;
-  int numCombines;
-};
+static const Size dispSize(640, 480);
+static const Size inputSize(1024, 860);
+
+
+
 static void help()
 {
   cout << "\nThis program demonstrates circle finding with the Hough transform.\n"
     "Usage:\n"
     "./houghcircles <image_name>, Default is ../data/board.jpg\n" << endl;
 }
-
-
 int main(int argc, char** argv)
 {
   cv::CommandLineParser parser(argc, argv,
@@ -37,11 +36,12 @@ int main(int argc, char** argv)
     return -1;
   }
   Mat3b img = imread(filename, 1);
-  resize(img, img, finalSize);
-  Mat3b blurred; 
-
-  cout << "showing image" << endl; 
-  imshow("image", img);
+  resize(img, img, inputSize);
+  Mat3b blurred;
+  Mat dispImg;
+  resize(img,dispImg,dispSize);
+  //cout << "showing image" << endl; 
+  imshow("image", dispImg);
   waitKey(0);
   Mat origImg; 
   cvtColor(img, origImg, CV_RGB2GRAY,1);
@@ -74,7 +74,7 @@ int main(int argc, char** argv)
           merged = true; 
           break; 
         }
-        
+
       }
       if(!merged) {  
         compositeCircle newCircle; 
@@ -84,14 +84,60 @@ int main(int argc, char** argv)
       }
     }
   }
+  int knownRadius = known_circles[0].circle[2]/2;
+  Mat blurredImg;
+  medianBlur(cimg, blurredImg,knownRadius %2? knownRadius : knownRadius-1 );
+  imshow("blurred", blurredImg);
+  waitKey(0);
+
+  int meanblack = 25;
+  int meanwhite = 100;
+  int numwhite = 0;
+  int numblack = 0;
+  int whiteval = 0;
+  int blackval = 0;
   for( size_t i = 0; i < known_circles.size(); i++ )
   {
     Vec3i c = known_circles[i].circle;
-    circle( cimg, Point(c[0], c[1]), c[2], Scalar(0,0,255), 3, LINE_AA);
-    circle( cimg, Point(c[0], c[1]), 2, Scalar(0,255,0), 3, LINE_AA);
+    int pixval = blurredImg.at<unsigned char>(Point(c[0],c[1]));
+    cout << " pixval is " << pixval << endl; 
+    if (abs(pixval-meanwhite) < abs(pixval-meanblack)){
+      numwhite++;
+      whiteval+=pixval; 
+    }
+    else
+    {
+      numblack++;
+      blackval+=pixval;
+    }
   }
-  namedWindow( "imOutput", WINDOW_AUTOSIZE ); // Create a window for display.
 
+  meanblack = numblack > 0 ? blackval/numblack : -255;
+  meanwhite = numwhite > 0 ? whiteval/numwhite : 255;
+  int  threshold_value = (meanwhite+meanblack)/2;
+  cout << "thresh value is " << threshold_value << endl; 
+  for( size_t i = 0; i < known_circles.size(); i++ )
+  {
+    Vec3i c = known_circles[i].circle;
+    int pixval = blurredImg.at<unsigned char>(Point(c[0],c[1]));
+    if(pixval> threshold_value)
+    {
+      known_circles[i].color = white;
+      circle( cimg, Point(c[0], c[1]), c[2], Scalar(0,0,255), 3, LINE_AA);
+      circle( cimg, Point(c[0], c[1]), 2, Scalar(0,255,0), 3, LINE_AA);
+      //   numwhite++;
+    }
+    else {
+      known_circles[i].color = black;
+      circle( cimg, Point(c[0], c[1]), c[2], Scalar(0,0,255), 3, LINE_AA);
+      circle( cimg, Point(c[0], c[1]), 2, Scalar(255,255,255), 3, LINE_AA);
+      //  numblack++;
+    }
+
+  }
+  resize(cimg, cimg, dispSize);
+
+  namedWindow( "imOutput", WINDOW_AUTOSIZE ); // Create a window for display.
   imshow("imOutput", cimg);
   cout << "num circles is: " << known_circles.size() << endl; 
   waitKey(0);
