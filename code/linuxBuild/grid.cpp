@@ -90,13 +90,14 @@ int main(int argc, char** argv)
   prev.y = corners_x[index].y;
 
   Point2f prev2(0,0);
+  Point2f prev3(0,0);
   vector<Point2f> final_points;
   Point2f extrap(0,0);
   Point2f last_point(9999,9999);
   corners_x.push_back(last_point);
   int col = 0;
   int row = 0;
-
+  int num = 0; //points to extrapolate at the end of column
   for(size_t i = 0; i < corners_x.size(); i ++){
 	if((corners_x[i].x - prev.x) < MAX_DIFF_X){
 		final_points.push_back(corners_x[i]);
@@ -111,6 +112,16 @@ int main(int argc, char** argv)
 			[](const cv::Point2f &a, const cv::Point2f &b){
 				return a.y < b.y;
 		});
+
+		prev3 = final_points[0];
+		for(size_t p = 1; p < final_points.size(); p++){
+			if((final_points[p].y - prev3.y) < 50){
+				final_points.erase(final_points.begin() + p);
+			}
+			prev3.x = final_points[p].x;
+			prev3.y = final_points[p].y;
+		}
+
 		prev2.x = final_points[0].x;
 		prev2.y = final_points[0].y;
 		for(size_t j = 0; j < final_points.size(); j++){ 
@@ -118,6 +129,12 @@ int main(int argc, char** argv)
 				if(prev2.y < final_points[j].y){
 					prev2.x = final_points[j].x;
 					prev2.y = final_points[j].y;
+				}
+				if(j == 0 && final_points.y > MAX_DIFF_Y){
+					extrap.x = final_points[0].x;
+					extrap.y = final_points[0].y - 100;
+					grid.at<Point2f>(col,row) = extrap;
+					row = row + 1;
 				}
 				grid.at<Point2f>(col,row) = final_points[j];
 				row = row + 1;
@@ -130,7 +147,18 @@ int main(int argc, char** argv)
 				j = j -1;
 				grid.at<Point2f>(col,row) = prev2;
 				row = row + 1;
-				final_points.push_back(prev2);
+			}
+			
+			if(row < 19 && j == (final_points.size() - 1)){
+				num = 19 - row;
+				for(int k = num; k > 0; --k){
+					extrap.x = prev2.x;
+					extrap.y = prev2.y + 100;
+					gird.at<Point2f>(col,row) = extrap;
+					prev2.x = extrap.x;
+					prev2.y = extrap.y;
+					row = row + 1;
+				}
 			}
 		}
 
