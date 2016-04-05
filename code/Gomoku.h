@@ -7,6 +7,7 @@
 #include <cassert>       // assert
 #include <vector>        // vector
 #include <algorithm>     // remove
+#include <string>
 #include "Coordinate.h"
 #include "Constants.h"
 #include "MoveType.h"
@@ -46,7 +47,7 @@ class Gomoku{
   Coordinate getAIMove();
   Coordinate getDefense();
   void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
-  void populateBoard(vector<compositeCircle> knownCircles);
+  void populateBoard(string filename);
   bool getWinnerDetermined() const {return winnerDetermined;}
   void setWinnerDetermined() {winnerDetermined = true;}
   Coordinate getHumanMove(vector<Coordinate>& us);

@@ -3,57 +3,34 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include <math.h>
 #include <iostream>
-
+#include "MoveType.h"
+#include "Gomoku.h"
 using namespace cv;
 using namespace std;
-static const Size finalSize(1024, 860);
-struct compositeCircle{
-  Vec3i circle;
-  int numCombines;
-};
-static void help()
-{
-  cout << "\nThis program demonstrates circle finding with the Hough transform.\n"
-    "Usage:\n"
-    "./houghcircles <image_name>, Default is ../data/board.jpg\n" << endl;
-}
+static const Size dispSize(640, 480);
+static const Size inputSize(1024, 860);
+static const Size GS(91,91);
 
-int const threshold_value = 100;
 
-int main(int argc, char** argv)
+vector <compositeCircle> observePieces(string filename)
 {
-  cv::CommandLineParser parser(argc, argv,
-      "{help h ||}{@image|../data/board.jpg|}"
-      );
-  if (parser.has("help"))
-  {
-    help();
-    return 0;
-  }
-  string filename = parser.get<string>("@image");
-  if (filename.empty())
-  {
-    help();
-    cout << "no image_name provided" << endl;
-    return -1;
-  }
   Mat3b img = imread(filename, 1);
-  resize(img, img, finalSize);
-  Mat3b blurred; 
-
-  cout << "showing image" << endl; 
-  imshow("image", img);
-  waitKey(0);
+  Mat3b blurred;
+  Mat dispImg;
+  resize(img,dispImg,dispSize);
+  //cout << "showing image" << endl; 
+  //imshow("image", dispImg);
+  //waitKey(0);
   Mat origImg; 
   cvtColor(img, origImg, CV_RGB2GRAY,1);
 
   Mat cimg;
   vector <compositeCircle> known_circles; 
-  for (int i = 1; i < 13; i+=2){
-    medianBlur(origImg, cimg, i);
+  for (int i = 1; i < 7; i+=1){
+    GaussianBlur(origImg, cimg,GS, i,i);
     vector<Vec3f> circles;
     HoughCircles(cimg, circles, HOUGH_GRADIENT, 1, 10,
-        100, 30, 10, 30 // change the last two parameters
+        100, 30, 40, 60 // change the last two parameters
         // (min_radius & max_radius) to detect larger circles
         );
 
@@ -75,7 +52,7 @@ int main(int argc, char** argv)
           merged = true; 
           break; 
         }
-        
+
       }
       if(!merged) {  
         compositeCircle newCircle; 
@@ -85,23 +62,57 @@ int main(int argc, char** argv)
       }
     }
   }
+
+  int meanblack = 25;
+  int meanwhite = 100;
+  int numwhite = 0;
+  int numblack = 0;
+  int whiteval = 0;
+  int blackval = 0;
   for( size_t i = 0; i < known_circles.size(); i++ )
   {
     Vec3i c = known_circles[i].circle;
-    circle( cimg, Point(c[0], c[1]), c[2], Scalar(0,0,255), 3, LINE_AA);
-    circle( cimg, Point(c[0], c[1]), 2, Scalar(0,255,0), 3, LINE_AA);
-  if(image.at<unsigned char>(c[0], c[1]) > threshold_value)
-            {
-                known_circles[i].color = white;
-            }
-            else {
-                known_circles[i].color = black;
-            }
-  
+    int pixval = origImg.at<unsigned char>(Point(c[0],c[1]));
+    cout << " pixval is " << pixval << endl; 
+    if (abs(pixval-meanwhite) < abs(pixval-meanblack)){
+      numwhite++;
+      whiteval+=pixval; 
+    }
+    else
+    {
+      numblack++;
+      blackval+=pixval;
+    }
   }
-  namedWindow( "imOutput", WINDOW_AUTOSIZE ); // Create a window for display.
 
+  meanblack = numblack > 0 ? blackval/numblack : -255;
+  meanwhite = numwhite > 0 ? whiteval/numwhite : 255;
+  int  threshold_value = (meanwhite+meanblack)/2;
+  cout << "thresh value is " << threshold_value << endl; 
+  for( size_t i = 0; i < known_circles.size(); i++ )
+  {
+    Vec3i c = known_circles[i].circle;
+    int pixval = origImg.at<unsigned char>(Point(c[0],c[1]));
+    if(pixval> threshold_value)
+    {
+      known_circles[i].color = white;
+      circle( cimg, Point(c[0], c[1]), c[2], Scalar(0,0,255), 3, LINE_AA);
+      circle( cimg, Point(c[0], c[1]), 2, Scalar(0,255,0), 3, LINE_AA);
+      //   numwhite++;
+    }
+    else {
+      known_circles[i].color = black;
+      circle( cimg, Point(c[0], c[1]), c[2], Scalar(0,0,255), 3, LINE_AA);
+      circle( cimg, Point(c[0], c[1]), 2, Scalar(255,255,255), 3, LINE_AA);
+      //  numblack++;
+    }
+
+  }
+  resize(cimg, cimg, dispSize);
+
+  namedWindow( "imOutput", WINDOW_AUTOSIZE ); // Create a window for display.
   imshow("imOutput", cimg);
-  cout << "num circles is: " << known_circles.size() << endl; 
   waitKey(0);
+  cout << "num circles is: " << known_circles.size() << endl; 
+  return known_circles;
 } 

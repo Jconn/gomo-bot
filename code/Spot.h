@@ -3,12 +3,18 @@
 
 #include "MoveType.h"
 #include "Coordinate.h"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+
+using namespace cv;
+using namespace std;
+using cv::CLAHE;
+
+
 struct spot{
   MoveType owner;
-  Coordinate topLeft;
-  Coordinate topRight;
-  Coordinate botLeft;
-  Coordinate botRight;
+  Point2f loc;  
 };
 
 #endif

@@ -2,12 +2,30 @@
 #include <vector>   // vector
 #include "Gomoku.h"
 #include "Coordinate.h"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 
-int main() {
 
+using namespace cv;
+using namespace std;
+
+
+int main(int argc, char** argv)
+{
+  cv::CommandLineParser parser(argc, argv,
+      "{help h ||}{@image|../data/board.jpg|}"
+      );
+  string filename = parser.get<string>("@image");
+  if (filename.empty())
+  {
+    cout << "no image_name provided" << endl;
+    return -1;
+  }  
   Gomoku game;
   std::vector<Coordinate> unoccupied_spaces;
-
+  game.populateBoard(filename);
+  return 0;
   // initialize the vector
   for(int i = 0; i < GRID_LENGTH; ++i) {
     for(int j = 0; j < GRID_LENGTH; ++j) {

@@ -12,8 +12,11 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "threats.h"
-
+#include "grid.h"
+#include "observepieces.h"
 using namespace std;
+using namespace cv;
+
 Gomoku::Gomoku() {
   // initialize all board values to blank
   for(int i = 0; i < GRID_LENGTH; i++) {
@@ -23,6 +26,8 @@ Gomoku::Gomoku() {
   }
   numMovesPlayed = 0;
   gameEnded = false;
+  if(!populateGridEdges("../images/pierpont/connector/001.jpg",board))
+    assert(0);
   populatePlaybook();
 }
 
@@ -531,39 +536,33 @@ void Gomoku::printGameState() {
 //  
 //}
 
-void Gomoku::populateBoard(vector<compositeCircle> knownCircles){
+void Gomoku::populateBoard(string filename){
   //TODO: observe previous gamestate, and make sure the delta is only 1 
   //spot prevBoard[GRID_LENGTH][GRID_LENGTH];
-  Coordinate curCenter(-1,-1);
-  bool foundSpot = false;
-  for (unsigned int t = 0; t < knownCircles.size(); ++t){
-    foundSpot=false;
-    compositeCircle curCircle = knownCircles[t];
-    for(int i = 0; i < GRID_LENGTH; ++i){
-      for(int j = 0; j < GRID_LENGTH; ++j){
-        curCenter.x = curCircle.circle[0];
-        curCenter.y = curCircle.circle[1];
-        if(withinRegion(curCenter,board[i][j]))
-        {
-          board[i][j].owner = curCircle.color;
-          foundSpot = true;
+  
+  vector<compositeCircle> knownCircles = observePieces(filename);
+
+  for(unsigned int i = 0; i < knownCircles.size(); ++i){
+    double minDist = -1;
+    int minX = 0;
+    int minY = 0;
+    for(int j = 0; j < GRID_LENGTH; ++j){
+      for(int t = 0; t < GRID_LENGTH; ++t){
+        double curDist = norm( board[j][t].loc - Point2f(knownCircles[i].circle[0],knownCircles[i].circle[1]));
+        if(minDist < 0 || curDist < minDist){
+            minDist = curDist;
+            minX = t;
+            minY = j;
         }
       }
-      if(foundSpot)
-        break;
     }
-    if(foundSpot)
-      break;
+    board[minX][minY].owner = knownCircles[i].color;
   }
+  printGameState();
 }
 
 bool Gomoku::withinRegion( Coordinate point, spot curSpot){
-  if(point.x > curSpot.topLeft.x && point.x < curSpot.topRight.x){
-    if(point.y >curSpot.topLeft.y && point.y < curSpot.botRight.y){
-      return true;
-    }
-  }
-  return false;
+return true;
 }
 
 bool Gomoku::isFree(Coordinate location){
