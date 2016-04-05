@@ -287,19 +287,22 @@ void Threat::findChildThreats(int depth){
             if(emptyBoundaries==2){
               //create straight four threat
               Threat sfourThreat(this,sfour);
-              //set this threat
-              assert(freeSpaces.size()==1); 
-              sfourThreat.setValue(freeSpaces[0], NULL, 0); 
-              if(isNewThreat(sfourThreat)) 
-                children.push_back(sfourThreat);  
+							//set this threat
+							//assert(freeSpaces.size()==1); 
+							if((freeSpaces.size()!=1))
+								break; 
+
+							sfourThreat.setValue(freeSpaces[0], NULL, 0); 
+							if(isNewThreat(sfourThreat)) 
+								children.push_back(sfourThreat);  
             }
             if(emptyBoundaries==1){
               //create a four threat
               Threat fourThreat1(this,four);
               Threat fourThreat2(this,four); 
               //set this threat
-              assert(freeSpaces.size()==1);
-              assert(freeBoundaries.size()==1);
+              if((freeSpaces.size()!=1))
+								break;
               fourThreat1.setValue(freeSpaces[0], &(freeBoundaries[0]), 1);
               fourThreat2.setValue(freeBoundaries[0], &(freeSpaces[0]), 1);
               if(isNewThreat(fourThreat1)) 
@@ -354,8 +357,10 @@ void Threat::findChildThreats(int depth){
               // what kind of three threat we are making...
               // borken three or three?
               //can create two threats, always. A broken three, or a straight three 
-              bool adjacent; 
-              threatSpaces.push_back(freeSpaces[0]); 
+							bool adjacent;
+							if(freeSpaces.size()!=2)
+								break; 
+							threatSpaces.push_back(freeSpaces[0]); 
               for(unsigned int i = 0; i< threatSpaces.size(); ++i){
                 adjacent = false; 
                 for(unsigned int j = 0; j < threatSpaces.size(); ++j){
@@ -561,8 +566,9 @@ void findInitThreats(Coordinate curMove, vector<Threat> &curThreats, spot board[
               Threat sfourThreat(sfour,board,myColor);
               //set this threat
             
-              assert(freeSpaces.size()==1); 
-              sfourThreat.setValue(freeSpaces[0], NULL, 0); 
+							if((freeSpaces.size()!=1))
+								break; 
+							sfourThreat.setValue(freeSpaces[0], NULL, 0); 
               if(isUnique(sfourThreat, curThreats))
                 curThreats.push_back(sfourThreat); 
             }
@@ -571,10 +577,13 @@ void findInitThreats(Coordinate curMove, vector<Threat> &curThreats, spot board[
               Threat fourThreat1(four,board,myColor);
               Threat fourThreat2(four,board,myColor); 
               //set this threat
-              assert(freeSpaces.size()==1);
-              assert(freeBoundaries.size()==1);
-              fourThreat1.setValue(freeSpaces[0], &(freeBoundaries[0]), 1);
-              fourThreat2.setValue(freeBoundaries[0], &(freeSpaces[0]), 1);
+							//assert(freeSpaces.size()==1);
+							if((freeSpaces.size()!=1))
+								break; 
+
+							//assert(freeBoundaries.size()==1);
+							fourThreat1.setValue(freeSpaces[0], &(freeBoundaries[0]), 1);
+							fourThreat2.setValue(freeBoundaries[0], &(freeSpaces[0]), 1);
               if(isUnique(fourThreat1,curThreats)) 
                 curThreats.push_back(fourThreat1);
               if(isUnique(fourThreat2,curThreats)) 
@@ -603,7 +612,9 @@ void findInitThreats(Coordinate curMove, vector<Threat> &curThreats, spot board[
               }
             }
             if(emptyBoundaries==2){
-              //we can make some threes, 
+							if(freeSpaces.size()!=2)
+								break;
+							//we can make some threes, 
               // we just need to figure out 
               // what kind of three threat we are making...
               // borken three or three?

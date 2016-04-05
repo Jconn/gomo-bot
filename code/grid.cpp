@@ -163,12 +163,14 @@ int populateGridEdges(string filename, spot (&board)[GRID_LENGTH][GRID_LENGTH])
     board[i][j].loc = grid.at<Point2f>(i,j);	
   }
 
-  }
-  Mat dispImg;
-  resize(src,dispImg,finalSize);
-  imshow("grid",dispImg);
-  waitKey(0);
-  return true;
+	}
+	/*
+		 Mat dispImg;
+		 resize(src,dispImg,finalSize);
+		 imshow("grid",dispImg);
+		 waitKey(0);
+	 */  
+	return true;
 }
 
 

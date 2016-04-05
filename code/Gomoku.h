@@ -47,7 +47,7 @@ class Gomoku{
   Coordinate getAIMove();
   Coordinate getDefense();
   void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
-  void populateBoard(string filename);
+  Point2f populateBoard(string filename);
   bool getWinnerDetermined() const {return winnerDetermined;}
   void setWinnerDetermined() {winnerDetermined = true;}
   Coordinate getHumanMove(vector<Coordinate>& us);

@@ -87,7 +87,7 @@ bool Coordinate::decrement(Direction moveDir, int numMoves){
 int Coordinate::movesFrom(Direction moveDir, Coordinate otherLoc){
   Coordinate iterator1 = otherLoc;
   int moves = 0;
-  cout << "comparing coords: " << this->x << "," << this->y << " and " << otherLoc.x << "," <<otherLoc.y << endl;
+  //cout << "comparing coords: " << this->x << "," << this->y << " and " << otherLoc.x << "," <<otherLoc.y << endl;
   while(iterator1 != *this){
     if(!iterator1.increment(moveDir,1)){
       moves = -1; 
@@ -96,7 +96,7 @@ int Coordinate::movesFrom(Direction moveDir, Coordinate otherLoc){
     ++moves; 
   }
   if(moves >=0){
-    cout << "locations are " << moves << " moves apart" << endl; 
+    //cout << "locations are " << moves << " moves apart" << endl; 
     return moves;
   }
   iterator1 = otherLoc;
@@ -107,6 +107,6 @@ int Coordinate::movesFrom(Direction moveDir, Coordinate otherLoc){
     }
     ++moves; 
   }
-  cout << "locations are " << moves << " moves apart" << endl;
+  //cout << "locations are " << moves << " moves apart" << endl;
   return moves;
 }

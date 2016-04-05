@@ -9,7 +9,7 @@ using namespace cv;
 using namespace std;
 static const Size dispSize(640, 480);
 static const Size inputSize(1024, 860);
-static const Size GS(91,91);
+static const Size GS(13,13);
 
 
 vector <compositeCircle> observePieces(string filename)
@@ -108,11 +108,11 @@ vector <compositeCircle> observePieces(string filename)
     }
 
   }
-  resize(cimg, cimg, dispSize);
+	//resize(cimg, cimg, dispSize);
 
-  namedWindow( "imOutput", WINDOW_AUTOSIZE ); // Create a window for display.
-  imshow("imOutput", cimg);
-  waitKey(0);
+	//namedWindow( "imOutput", WINDOW_AUTOSIZE ); // Create a window for display.
+	//imshow("imOutput", cimg);
+  //waitKey(0);
   cout << "num circles is: " << known_circles.size() << endl; 
   return known_circles;
 } 
