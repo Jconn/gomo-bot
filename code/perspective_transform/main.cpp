@@ -7,8 +7,10 @@
 #include "opencv/modules/imgproc/include/opencv2/imgproc.hpp"
 #include "opencv/modules/core/include/opencv2/core.hpp" 
 #include "opencv/modules/highgui/include/opencv2/highgui.hpp" // functions for I/O
-#include "DisplayImage.h"
+#include "PerspectiveTransform.h"
 #include "Color.h"
+
+
 
 //     note: the top-down orientation of corners is as follows:
 //        
@@ -64,6 +66,12 @@ int main(int argc, char** argv) {
   cv::HoughCircles(blue.hue_image, blue.circles, CV_HOUGH_GRADIENT, 1, blue.hue_image.rows/8, 100, 20, 0, 0);
   cv::HoughCircles(green.hue_image, green.circles, CV_HOUGH_GRADIENT, 1, green.hue_image.rows/8, 100, 20, 0, 0);
   cv::HoughCircles(yellow.hue_image, yellow.circles, CV_HOUGH_GRADIENT, 1, yellow.hue_image.rows/8, 100, 20, 0, 0);
+
+  cv::imshow("1", yellow.hue_image);
+  cv::imshow("2", red.hue_image);
+  cv::imshow("3", blue.hue_image);
+  cv::imshow("4", green.hue_image);
+
 
   // (6) error check, make sure we've detected a non-zero amount of corners
   checkNumCirclesDetected(red.circles, blue.circles, green.circles, yellow.circles);

@@ -1,16 +1,11 @@
+#include <iostream>
 #include "Color.h"
+#include "PerspectiveTransform.h"
 
-cv::Mat readInputImage(std::string str) {
-  cv::Mat image = cv::imread(str, CV_LOAD_IMAGE_COLOR); 
 
-  // check for invalid input
-  if(!image.data) {
-    cout <<  "Could not open or find the image" << std::endl ;
-    exit(1);
-  }
-  return image;
-}
 
+
+/*
 // third argument must be hsv-valued image
 void findAreasWithColor(Color& color, char c, const cv::Mat& hsv) {
 
@@ -66,4 +61,4 @@ void printCoord(const std::vector<cv::Vec3f>& c, std::string str);
 void printNumberOfCirclesDetected(std::vector<cv::Point2f>& d); 
 
 
-
+*/
