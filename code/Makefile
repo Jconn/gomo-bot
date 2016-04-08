@@ -6,8 +6,8 @@ OPENCV_FLAGS = -I/usr/local/include/opencv -I/usr/local/include
 CFLAGS = -g -Wall -Werror -std=c++11 $(OPENCV_FLAGS)
 
 default:	observe 
-ai:  main.cpp grid.cpp Gomoku.cpp Coordinate.cpp threats.cpp observepieces.cpp 
-	$(CC) $(CFLAGS) main.cpp grid.cpp Gomoku.cpp Coordinate.cpp threats.cpp observepieces.cpp -o $@ $(LIBS) 
+ai:  main.cpp grid.cpp Gomoku.cpp Coordinate.cpp threats.cpp observepieces.cpp perspectivetransform.cpp
+	$(CC) $(CFLAGS) main.cpp grid.cpp Gomoku.cpp Coordinate.cpp threats.cpp observepieces.cpp perspectivetransform.cpp -o $@ $(LIBS) 
 observe: observepieces.cpp
 	$(CC) $(CFLAGS) observepieces.cpp -o $@ $(LIBS)
 grid: hough_lines.cpp

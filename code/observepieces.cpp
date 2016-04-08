@@ -85,7 +85,6 @@ vector <compositeCircle> observePieces(string filename, int expectedPieces)
               merged = true; 
               break; 
             }
-
           }
           if(!merged) {  
             compositeCircle newCircle; 
