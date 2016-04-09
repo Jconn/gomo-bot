@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     return -1;
   }
 */  
-	// initialize the vector
+	// initialize the vector with empty coordinates
 	std::vector<Coordinate> unoccupied_spaces;
 	for(int i = 0; i < GRID_LENGTH; ++i) {
 		for(int j = 0; j < GRID_LENGTH; ++j) {
@@ -38,10 +38,9 @@ int main(int argc, char** argv)
 
 	Gomoku game;
 	cout << "entering game loop " << endl;
+
 	while(!game.getGameEnded() && !game.isDraw()) {
 		cout << " populating the the gamestate " << endl;  
-
-
 
 		mostRecentMove = game.getAIMove();
 		game.printGameState();
@@ -51,19 +50,26 @@ int main(int argc, char** argv)
 			game.setGameEnded();
 			break;
 		}
-		cout << " move please (press 0 when done) " << endl;
-		int doneVal = -1;	
-		while(doneVal!=0){
-			cin >> doneVal;
-		}
-		system("raspistill -t 1000 -n -o move.jpg");
-		cout << " picture has been taken" << endl;	
-		game.populateBoard("move.jpg");
+
+		bool spotted =false;
+		Coordinate enemyMove;	
+		while(!spotted){
+			cout << " move please (press 0 when done) " << endl;
+			int doneVal = -1;	
+			while(doneVal!=0){
+				cin >> doneVal;
+			}
+			system("raspistill -t 1000 -n -o move.jpg");
+			cout << " picture has been taken" << endl;
+			spotted = game.populateBoard("move.jpg", enemyMove);
+			if(!spotted)
+				cout << "did not detect picture taken " << endl;	
+		}	
 
 		game.printGameState();
 
 		// check if game is won 
-		if(game.winningMove(mostRecentMove)) {
+		if(game.winningMove(enemyMove)) {
 			std::cout << "a player wins!\n"; // TODO: update this
 			game.setGameEnded();
 			break;

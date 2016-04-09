@@ -35,7 +35,7 @@ enum ThreatType{three=2, bthree=1,four=3,sfour=4,five=5,none=0 };
 
 //assume the opponent can do all cost squares at once
 //proceed by first making gain move, and then apply all cost moves  
-class Threat{
+class Threat {
   private:
     void setWinning(){
       winningDepth = -1; 

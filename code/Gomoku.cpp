@@ -29,8 +29,14 @@ Gomoku::Gomoku() {
 	}
 	numMovesPlayed = 0;
 	gameEnded = false;
-	//system("raspistill -t 1000 -o empty.jpg");	
-	if(!populateGridEdges("../images/pierpont/connector/001.jpg",board))
+	system("raspistill -t 1000 -o empty.jpg");	
+	//if(!populateGridEdges("../images/pierpont/connector/001.jpg",board))
+	//	assert(0);
+	// 
+	// if(!populateGridEdges("../images/JJgame/000.jpg",board))
+  //		assert(0);
+	
+	if(!populateGridEdges("empty.jpg", board))
 		assert(0);
 	populatePlaybook();
 }
@@ -541,19 +547,20 @@ void Gomoku::printGameState() {
 //  
 //}
 
-Point2f Gomoku::populateBoard(string filename){
-  //TODO: observe previous gamestate, and make sure the delta is only 1 
-  //spot prevBoard[GRID_LENGTH][GRID_LENGTH];
-  
-  vector<compositeCircle> knownCircles = observePieces(filename);
-	Point2f coords;
+bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
+	//TODO: observe previous gamestate, and make sure the delta is only 1 
+	//spot prevBoard[GRID_LENGTH][GRID_LENGTH];
 
-  for(unsigned int i = 0; i < knownCircles.size(); ++i){
-    double minDist = -1;
-    int minX = 0;
-    int minY = 0;
-		
-    for(int j = 0; j < GRID_LENGTH; ++j){
+	vector<compositeCircle> knownCircles = observePieces(filename,numMovesPlayed+1 );
+	Point2f coords;
+	bool foundPiece = false;
+	for(unsigned int i = 0; i < knownCircles.size(); ++i){
+
+		double minDist = -1;
+		int minX = 0;
+		int minY = 0;
+
+		for(int j = 0; j < GRID_LENGTH; ++j){
 			for(int t = 0; t < GRID_LENGTH; ++t){
 				double curDist = norm( board[j][t].loc - Point2f(knownCircles[i].circle[0],knownCircles[i].circle[1]));
 				if(minDist < 0 || curDist < minDist){
@@ -562,9 +569,16 @@ Point2f Gomoku::populateBoard(string filename){
 					minY = j;
 
 				}
-      }
+			}
 		}
 		if(board[minX][minY].owner == blank){
+			if(foundPiece ==true){
+				cout << "found more than one piece in populateBoard " << endl;
+				assert(0);
+			}
+			foundPiece = true;	
+			enemyMove.x = minX;
+			enemyMove.y = minY;	
 			enemyMoves.push_back(Coordinate(minX,minY)); 
 			board[minX][minY].owner = knownCircles[i].color;
 			coords.x = minX;
@@ -576,7 +590,9 @@ Point2f Gomoku::populateBoard(string filename){
 			cout << "detected piece placed at " << minY << "," << minX << endl;
 		}	
 	}
-	return coords;
+	if(foundPiece==true)
+		incrementNumMovesPlayed();
+	return foundPiece;
 }
 
 bool Gomoku::withinRegion( Coordinate point, spot curSpot){

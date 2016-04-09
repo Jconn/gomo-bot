@@ -45,13 +45,13 @@ class Gomoku{
   public:
   Gomoku();
   Coordinate getAIMove();
-  Coordinate getDefense();
-  void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
-  Point2f populateBoard(string filename);
-  bool getWinnerDetermined() const {return winnerDetermined;}
-  void setWinnerDetermined() {winnerDetermined = true;}
-  Coordinate getHumanMove(vector<Coordinate>& us);
-  //void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
+	Coordinate getDefense();
+	void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
+	bool populateBoard(string filename, Coordinate &enemyMove);
+	bool getWinnerDetermined() const {return winnerDetermined;}
+	void setWinnerDetermined() {winnerDetermined = true;}
+	Coordinate getHumanMove(vector<Coordinate>& us);
+	//void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
   int getNumMovesPlayed() const {return numMovesPlayed;}
   void incrementNumMovesPlayed() {numMovesPlayed++;}
   Coordinate getAttack();
