@@ -5,8 +5,6 @@
 #include <cassert> // assert
 #include "Color.h"
 
-
-
 cv::Mat readInputImage(std::string str) {
   cv::Mat image = cv::imread(str, CV_LOAD_IMAGE_COLOR); 
 
@@ -95,34 +93,64 @@ void checkNumCirclesDetected(const std::vector<cv::Vec3f>& red_circles,
   }
 }
 
-void identifyCirclesOnImage(const std::vector<cv::Vec3f>& circle, cv::Mat im);
+void identifyCirclesOnImage(const std::vector<cv::Vec3f>& circle, cv::Mat im) {
+  for(size_t current_circle = 0; current_circle < circle.size(); ++current_circle) {
+    cv::Point center(std::round(circle[current_circle][0]), std::round(circle[current_circle][1]));
+    int radius = std::round(circle[current_circle][2]);
+
+    cv::circle(im, center, radius, cv::Scalar(0, 255, 0), 5);
+  }
+}
 
 // take in our peculiarly-typed vector of detected circles, output the distance between the two corner markers
-double euclideanDistance(const std::vector<cv::Vec3f>& circle1, const std::vector<cv::Vec3f>& circle2);
+double euclideanDistance(const std::vector<cv::Vec3f>& circle1, const std::vector<cv::Vec3f>& circle2) {
+  cv::Point p1 = cv::Point(circle1[0][0], circle1[0][1]);
+  cv::Point p2 = cv::Point(circle2[0][0], circle2[0][1]);
+
+  cv::Point diff = p1 - p2;
+
+  return sqrt(diff.x * diff.x + diff.y * diff.y);
+}
 
 // format the data from origin to destination required by the function which performs our transformation
 void populateQuadrilateralCorners(const std::vector<cv::Vec3f>& red_circle, 
     const std::vector<cv::Vec3f>& blue_circle,
     const std::vector<cv::Vec3f>& green_circle,
     const std::vector<cv::Vec3f>& yellow_circle,
-    std::vector<cv::Point2f>& destination);
+    std::vector<cv::Point2f>& destination) {
+
+  destination.push_back(cv::Point(red_circle[0][0],red_circle[0][1]));  
+  destination.push_back(cv::Point(blue_circle[0][0], blue_circle[0][1]));  
+  destination.push_back(cv::Point(green_circle[0][0], green_circle[0][1]));  
+  destination.push_back(cv::Point(yellow_circle[0][0], yellow_circle[0][1]));  
+}
+
+int getEdgeSizeOfWarpedImage(std::vector<cv::Vec3f>& red_circle, 
+    std::vector<cv::Vec3f>& blue_circle,
+    std::vector<cv::Vec3f>& green_circle,
+    std::vector<cv::Vec3f>& yellow_circle) {
+  
+  // find distance between vertices of all four circles (no diagonals)
+  double d1 = euclideanDistance(red_circle, blue_circle);
+  double d2 = euclideanDistance(blue_circle, yellow_circle);
+  double d3 = euclideanDistance(yellow_circle, green_circle);
+  double d4 = euclideanDistance(green_circle, red_circle);
+  
+  return fmax(d1, fmax(d2, fmax(d3, d4)));
+}
 
 void populateSquareCorners(std::vector<cv::Vec3f>& red_circle, 
     std::vector<cv::Vec3f>& blue_circle,
     std::vector<cv::Vec3f>& green_circle,
     std::vector<cv::Vec3f>& yellow_circle, 
     int maxEdge,
-    std::vector<cv::Point2f>& destination);
+    std::vector<cv::Point2f>& destination) {
 
-int getEdgeSizeOfWarpedImage(std::vector<cv::Vec3f>& red_circle, 
-    std::vector<cv::Vec3f>& blue_circle,
-    std::vector<cv::Vec3f>& green_circle,
-    std::vector<cv::Vec3f>& yellow_circle);
-
-// testing functions start here
-void printCoord(const std::vector<cv::Vec3f>& c, std::string str);
-
-void printNumberOfCirclesDetected(std::vector<cv::Point2f>& d); 
+  destination.push_back(cv::Point(0, 0));
+  destination.push_back(cv::Point(0, maxEdge));
+  destination.push_back(cv::Point(maxEdge, 0));
+  destination.push_back(cv::Point(maxEdge, maxEdge));
+}
 
 #endif
 

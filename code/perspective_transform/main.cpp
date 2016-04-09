@@ -10,8 +10,6 @@
 #include "PerspectiveTransform.h"
 #include "Color.h"
 
-
-
 //     note: the top-down orientation of corners is as follows:
 //        
 //         red                 blue
@@ -67,12 +65,6 @@ int main(int argc, char** argv) {
   cv::HoughCircles(green.hue_image, green.circles, CV_HOUGH_GRADIENT, 1, green.hue_image.rows/8, 100, 20, 0, 0);
   cv::HoughCircles(yellow.hue_image, yellow.circles, CV_HOUGH_GRADIENT, 1, yellow.hue_image.rows/8, 100, 20, 0, 0);
 
-  cv::imshow("1", yellow.hue_image);
-  cv::imshow("2", red.hue_image);
-  cv::imshow("3", blue.hue_image);
-  cv::imshow("4", green.hue_image);
-
-
   // (6) error check, make sure we've detected a non-zero amount of corners
   checkNumCirclesDetected(red.circles, blue.circles, green.circles, yellow.circles);
 
@@ -81,6 +73,7 @@ int main(int argc, char** argv) {
   identifyCirclesOnImage(blue.circles, src_detected_circles);
   identifyCirclesOnImage(green.circles, src_detected_circles);
   identifyCirclesOnImage(yellow.circles, src_detected_circles);
+
 
   // (8) the perspective transformation
   std::vector<cv::Point2f> quadrilateral_pts; // points from our original image
@@ -98,7 +91,6 @@ int main(int argc, char** argv) {
   dst = cv::Mat::zeros(src.rows, src.cols, CV_8UC3);
   cv::warpPerspective(src, dst, M, src.size());
 
-
   // (9) crop image to include only the board
   cv::Rect myROI(0, 0, warpedEdgeSize, warpedEdgeSize);
   dst = dst(myROI);
@@ -112,4 +104,3 @@ int main(int argc, char** argv) {
   cv::waitKey(0);
   return 0;
 }
-
