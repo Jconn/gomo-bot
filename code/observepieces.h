@@ -5,5 +5,5 @@
 using namespace cv;
 using namespace std;
 
-vector <compositeCircle> observePieces(string filename);
+vector <compositeCircle> observePieces(string filename, int expectedPieces);
 #endif
