@@ -74,14 +74,13 @@ int main(int argc, char** argv) {
   identifyCirclesOnImage(green.circles, src_detected_circles);
   identifyCirclesOnImage(yellow.circles, src_detected_circles);
 
-
   // (8) the perspective transformation
   std::vector<cv::Point2f> quadrilateral_pts; // points from our original image
   populateQuadrilateralCorners(red.circles, blue.circles, green.circles, yellow.circles, quadrilateral_pts);
 
   // square_pts contains points of our transformed image, 
   // with corners (0,0), (0, maxHeight), (maxWidth, 0), (maxWidth, maxHeight)
-  std::vector<cv::Point2f> square_pts;        
+  std::vector<cv::Point2f> square_pts;
   int warpedEdgeSize = getEdgeSizeOfWarpedImage(red.circles, blue.circles, green.circles, yellow.circles);
   populateSquareCorners(red.circles, blue.circles, green.circles, yellow.circles, warpedEdgeSize, square_pts);
 
@@ -96,11 +95,12 @@ int main(int argc, char** argv) {
   dst = dst(myROI);
 
   cv::resize(src_detected_circles, src_detected_circles, cv::Size(), 0.25, 0.25, cv::INTER_LINEAR); // resize the image to 0.25x
+  cv::resize(dst, dst, cv::Size(), 0.5, 0.5, cv::INTER_LINEAR); // resize the image to 0.25x
 
   cv::imshow("asdf", dst);
   cv::imshow("detected circles", src_detected_circles);
 
-  cv::imwrite("transform_output.png", dst);
+  cv::imwrite("transform_output.jpg", dst);
   cv::waitKey(0);
   return 0;
 }
