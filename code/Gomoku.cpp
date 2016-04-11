@@ -1,24 +1,25 @@
-
 #include <iostream>      // cin, cout
 #include <time.h>        // time
 #include <stdlib.h>      // srand, rand 
 #include <cassert>       // assert
 #include <vector>        // vector
 #include <algorithm>     // remove
-#include "Coordinate.h"
-#include "Constants.h"
-#include "MoveType.h"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "threats.h"
-#include "grid.h"
-#include "observepieces.h"
-using namespace std;
-using namespace cv;
 #include <unistd.h>
 #include <fstream>
 
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+
+#include "Coordinate.h"
+#include "Constants.h"
+#include "MoveType.h"
+#include "threats.h"
+#include "grid.h"
+#include "observepieces.h"
+
+using namespace std;
+using namespace cv;
 
 Gomoku::Gomoku() {
 	// initialize all board values to blank
@@ -29,15 +30,18 @@ Gomoku::Gomoku() {
 	}
 	numMovesPlayed = 0;
 	gameEnded = false;
-	system("raspistill -t 1000 -o empty.jpg");	
+
 	//if(!populateGridEdges("../images/pierpont/connector/001.jpg",board))
 	//	assert(0);
 	// 
-	// if(!populateGridEdges("../images/JJgame/000.jpg",board))
-  //		assert(0);
+	if(!populateGridEdges("../images/JJgame/000.jpg",board))
+  	assert(0);
 	
-	if(!populateGridEdges("empty.jpg", board))
-		assert(0);
+	// begin code to take empty board image
+	//system("raspistill -t 1000 -o empty.jpg");	
+	// if(!populateGridEdges("empty.jpg", board))
+	// assert(0);
+
 	populatePlaybook();
 }
 
@@ -90,8 +94,9 @@ Coordinate Gomoku::getAIMove(){
 	}
 	curMove = myMoves[myMoves.size()-1];
 	setAIMove(curMove);
-	return curMove;
-}
+	
+
+	return curMove;}
 
 void Gomoku::populatePlaybook(){
 	openingPlaybook.push_back(Coordinate(9,9));
@@ -238,7 +243,7 @@ Coordinate Gomoku::getAttack(){
 
 		}
 	}
-	cout << "attempting to find best move among shittters " << endl;
+	cout << "attempting to find best move among s--ers" << endl;
 	cout << "threat size is " <<threats.size() << endl;
 	for(unsigned int i = 0; i < threats.size(); ++i){
 		threats[i].findChildThreats(5); 
