@@ -21,6 +21,7 @@ vector <compositeCircle> observePieces(string filename, int expectedPieces)
   resize(img,dispImg,dispSize);
   cout << "showing image" << endl; 
   imshow("image", dispImg);
+	
 	waitKey(0);
 	vector<Mat> dispVec;
 	split(dispImg, dispVec);
@@ -33,9 +34,6 @@ vector <compositeCircle> observePieces(string filename, int expectedPieces)
 	cout << "showing image channel 2" << endl; 
 	imshow("image", dispVec[2]);
 	waitKey(0);
-
-
-
 
 
 	Mat origImg; 

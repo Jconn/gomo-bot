@@ -2,6 +2,7 @@
 #include <vector>   // vector
 #include "Gomoku.h"
 #include "Coordinate.h"
+#include "perspectivetransform.h"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
@@ -10,7 +11,6 @@
 #include <fstream>
 using namespace cv;
 using namespace std;
-
 
 int main(int argc, char** argv)
 {
@@ -34,12 +34,13 @@ int main(int argc, char** argv)
 		}
 	}
 
-	Coordinate mostRecentMove(0,0);
+	Coordinate mostRecentMove(0,0); // initialize mostRecentMove
 
 	Gomoku game;
+
 	cout << "entering game loop " << endl;
 
-	while(!game.getGameEnded() && !game.isDraw()) {
+	while(!game.isEnded() && !game.isDraw()) {
 		cout << " populating the the gamestate " << endl;  
 
 		mostRecentMove = game.getAIMove();
@@ -51,8 +52,9 @@ int main(int argc, char** argv)
 			break;
 		}
 
-		bool spotted =false;
+		bool spotted = false;
 		Coordinate enemyMove;	
+
 		while(!spotted){
 			cout << " move please (press 0 when done) " << endl;
 			int doneVal = -1;	
@@ -61,6 +63,11 @@ int main(int argc, char** argv)
 			}
 			system("raspistill -t 1000 -n -o move.jpg");
 			cout << " picture has been taken" << endl;
+			
+
+			// perform perspective transform
+//			perspectiveTransform("move.jpg");
+
 			spotted = game.populateBoard("move.jpg", enemyMove);
 			if(!spotted)
 				cout << "did not detect picture taken " << endl;	
@@ -82,11 +89,9 @@ int main(int argc, char** argv)
 
 
 
-    // check if game is a draw
-    if(game.isDraw())
+    // check if game is ended 
+    if(game.isEnded())
       game.setGameEnded();
-
-    // check if game is won 
 
     // check if game is a draw
     if(game.isDraw())
