@@ -77,6 +77,7 @@ int populateGridEdges(string filename, spot (&board)[GRID_LENGTH][GRID_LENGTH])
   int col = 0;
   int row = 0;
   int num = 0; //points to extrapolate at the end of column
+  int num2 = 0; //points to extrapolate at the beginning of a column
   for(size_t i = 0; i < corners_x.size(); i ++){
 	if((corners_x[i].x - prev.x) < MAX_DIFF_X){
 		final_points.push_back(corners_x[i]);
@@ -109,12 +110,17 @@ int populateGridEdges(string filename, spot (&board)[GRID_LENGTH][GRID_LENGTH])
 					prev2.x = final_points[j].x;
 					prev2.y = final_points[j].y;
 				}
-				if(j == 0 && final_points[0].y > MAX_DIFF_Y){
-					extrap.x = final_points[0].x;
-					extrap.y = final_points[0].y - 100;
-					grid.at<Point2f>(col,row) = extrap;
-					row = row + 1;
+				if(j == 0 && final_points[j].y > MAX_DIFF_Y){
+					num2 = final_points[0].y / 100;
+					for(int p = num2; p > 0; --p){
+						extrap.x = final_points[0].x;
+						extrap.y = final_points[0].y - p*100;
+            if(row>18) break;
+            grid.at<Point2f>(col,row) = extrap;
+						row = row + 1;
+					}
 				}
+        if(row>18) break;
 				grid.at<Point2f>(col,row) = final_points[j];
 				row = row + 1;
 			}
@@ -124,7 +130,8 @@ int populateGridEdges(string filename, spot (&board)[GRID_LENGTH][GRID_LENGTH])
 				prev2.x = extrap.x;
 				prev2.y = extrap.y;
 				j = j -1;
-				grid.at<Point2f>(col,row) = prev2;
+				if(row>18) break;
+        grid.at<Point2f>(col,row) = prev2;
 				row = row + 1;
 			}
 			
@@ -133,6 +140,7 @@ int populateGridEdges(string filename, spot (&board)[GRID_LENGTH][GRID_LENGTH])
 				for(int k = num; k > 0; --k){
 					extrap.x = prev2.x;
 					extrap.y = prev2.y + 100;
+          if(row>18) break;
 					grid.at<Point2f>(col,row) = extrap;
 					prev2.x = extrap.x;
 					prev2.y = extrap.y;
@@ -140,9 +148,9 @@ int populateGridEdges(string filename, spot (&board)[GRID_LENGTH][GRID_LENGTH])
 				}
 			}
 		}
-
 		col = col + 1;
-		row = 0;
+		if(col>18) break;
+    row = 0;
 		final_points.clear();
 		if(prev.y < MAX_DIFF_Y){
 			final_points.push_back(prev);
@@ -156,14 +164,13 @@ int populateGridEdges(string filename, spot (&board)[GRID_LENGTH][GRID_LENGTH])
 	}
   }
 
-
   for(int i = 0; i < grid.rows; i++){
-	for(int j = 0; j<grid.cols; j++){
-		cout << "Column " << i << " Row " << j << " " << grid.at<Point2f>(i,j) << endl;
-    board[i][j].loc = grid.at<Point2f>(i,j);	
-  }
+    for(int j = 0; j<grid.cols; j++){
+      //      cout << "Column " << i << " Row " << j << " " << grid.at<Point2f>(i,j) << endl;
+      board[i][j].loc = grid.at<Point2f>(i,j);	
+    }
 
-	}
+  }
 	/*
 		 Mat dispImg;
 		 resize(src,dispImg,finalSize);

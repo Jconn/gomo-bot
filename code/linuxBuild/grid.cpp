@@ -136,10 +136,12 @@ int main(int argc, char** argv)
 					for(int p = num2; p > 0; --p){
 						extrap.x = final_points[0].x;
 						extrap.y = final_points[0].y - p*100;
-						grid.at<Point2f>(col,row) = extrap;
+            if(row>18) break;
+            grid.at<Point2f>(col,row) = extrap;
 						row = row + 1;
 					}
 				}
+        if(row>18) break;
 				grid.at<Point2f>(col,row) = final_points[j];
 				row = row + 1;
 			}
@@ -149,7 +151,8 @@ int main(int argc, char** argv)
 				prev2.x = extrap.x;
 				prev2.y = extrap.y;
 				j = j -1;
-				grid.at<Point2f>(col,row) = prev2;
+				if(row>18) break;
+        grid.at<Point2f>(col,row) = prev2;
 				row = row + 1;
 			}
 			
@@ -158,6 +161,7 @@ int main(int argc, char** argv)
 				for(int k = num; k > 0; --k){
 					extrap.x = prev2.x;
 					extrap.y = prev2.y + 100;
+          if(row>18) break;
 					grid.at<Point2f>(col,row) = extrap;
 					prev2.x = extrap.x;
 					prev2.y = extrap.y;
@@ -166,7 +170,8 @@ int main(int argc, char** argv)
 			}
 		}
 		col = col + 1;
-		row = 0;
+		if(col>18) break;
+    row = 0;
 		final_points.clear();
 		if(prev.y < MAX_DIFF_Y){
 			final_points.push_back(prev);
@@ -180,14 +185,14 @@ int main(int argc, char** argv)
 	}
   }
 
+  /*
+     for(int i = 0; i < grid.rows; i++){
+     for(int j = 0; j<grid.cols; j++){
+     cout << "Column " << i << " Row " << j << " " << grid.at<Point2f>(i,j) << endl;
+     }
 
-  for(int i = 0; i < grid.rows; i++){
-	for(int j = 0; j<grid.cols; j++){
-		cout << "Column " << i << " Row " << j << " " << grid.at<Point2f>(i,j) << endl;
-	}
-
-  }
- 
+     }
+     */ 
   waitKey(0);
   return 0;
 }
