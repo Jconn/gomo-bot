@@ -34,58 +34,58 @@ int main(int argc, char** argv)
 		}
 	}
 
-	Coordinate mostRecentMove(0,0); // initialize mostRecentMove
+  Coordinate mostRecentMove(0,0); // initialize mostRecentMove
 
-	Gomoku game;
+  Gomoku game;
 
-	cout << "entering game loop " << endl;
+  cout << "entering game loop " << endl;
 
-	while(!game.isEnded() && !game.isDraw()) {
-		cout << " populating the the gamestate " << endl;  
+  while(!game.isEnded() && !game.isDraw()) {
+    cout << " populating the the gamestate " << endl;  
 
-		mostRecentMove = game.getAIMove();
-		game.printGameState();
+    mostRecentMove = game.getAIMove();
+    game.printGameState();
 
-		if(game.winningMove(mostRecentMove)) {
-			std::cout << "a computer wins!\n"; // TODO: update this
-			game.setGameEnded();
-			break;
-		}
+    if(game.winningMove(mostRecentMove)) {
+      std::cout << "a computer wins!\n"; // TODO: update this
+      game.setGameEnded();
+      break;
+    }
 
-		bool spotted = false;
-		Coordinate enemyMove;	
+    bool spotted = false;
+    Coordinate enemyMove;	
 
-		while(!spotted){
-			cout << " move please (press 0 when done) " << endl;
-			int doneVal = -1;	
-			while(doneVal!=0){
-				cin >> doneVal;
-			}
-			system("raspistill -t 1000 -n -o move.jpg");
-			cout << " picture has been taken" << endl;
-			
-
-			// perform perspective transform
-//			perspectiveTransform("move.jpg");
-
-			spotted = game.populateBoard("move.jpg", enemyMove);
-			if(!spotted)
-				cout << "did not detect picture taken " << endl;	
-		}	
-
-		game.printGameState();
-
-		// check if game is won 
-		if(game.winningMove(enemyMove)) {
-			std::cout << "a player wins!\n"; // TODO: update this
-			game.setGameEnded();
-			break;
-		}
+    while(!spotted){
+      cout << " move please (press 0 when done) " << endl;
+      int doneVal = -1;	
+      while(doneVal!=0){
+        cin >> doneVal;
+      }
+      system("raspistill -t 1000 -n -o move.jpg");
+      cout << " picture has been taken" << endl;
 
 
+      // perform perspective transform
+      //			perspectiveTransform("move.jpg");
 
-//    mostRecentMove = game.getHumanMove(unoccupied_spaces);
-//    game.printGameState();
+      spotted = game.populateBoard("move.jpg", enemyMove);
+      if(!spotted)
+        cout << "did not detect picture taken " << endl;	
+    }	
+
+    game.printGameState();
+
+    // check if game is won 
+    if(game.winningMove(enemyMove)) {
+      std::cout << "a player wins!\n"; // TODO: update this
+      game.setGameEnded();
+      break;
+    }
+
+
+
+    //    mostRecentMove = game.getHumanMove(unoccupied_spaces);
+    //    game.printGameState();
 
 
 
