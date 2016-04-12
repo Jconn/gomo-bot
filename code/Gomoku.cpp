@@ -17,6 +17,7 @@
 #include "threats.h"
 #include "grid.h"
 #include "observepieces.h"
+#include "UI.cpp"
 
 using namespace std;
 using namespace cv;
@@ -94,8 +95,10 @@ Coordinate Gomoku::getAIMove(){
 	}
 	curMove = myMoves[myMoves.size()-1];
 	setAIMove(curMove);
-	
-
+  //Call UI
+	Mat src = imread("move.jpg", 0); 
+	UI(src, curMove, board);
+  
 	return curMove;}
 
 void Gomoku::populatePlaybook(){
@@ -579,7 +582,8 @@ bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
 		if(board[minX][minY].owner == blank){
 			if(foundPiece ==true){
 				cout << "found more than one piece in populateBoard " << endl;
-				assert(0);
+			  cout << "please make sure only one piece was played " << endl;
+			  return false;  
 			}
 			foundPiece = true;	
 			enemyMove.x = minX;
