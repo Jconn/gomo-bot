@@ -98,6 +98,7 @@ int main(int argc, char** argv)
   int col = 0;
   int row = 0;
   int num = 0; //points to extrapolate at the end of column
+  int num2 = 0; //points to extrapolate at the beginning of a column
   for(size_t i = 0; i < corners_x.size(); i ++){
 	if((corners_x[i].x - prev.x) < MAX_DIFF_X){
 		final_points.push_back(corners_x[i]);
@@ -130,11 +131,14 @@ int main(int argc, char** argv)
 					prev2.x = final_points[j].x;
 					prev2.y = final_points[j].y;
 				}
-				if(j == 0 && final_points.y > MAX_DIFF_Y){
-					extrap.x = final_points[0].x;
-					extrap.y = final_points[0].y - 100;
-					grid.at<Point2f>(col,row) = extrap;
-					row = row + 1;
+				if(j == 0 && final_points[j].y > MAX_DIFF_Y){
+					num2 = final_points[0].y / 100;
+					for(int p = num2; p > 0; --p){
+						extrap.x = final_points[0].x;
+						extrap.y = final_points[0].y - p*100;
+						grid.at<Point2f>(col,row) = extrap;
+						row = row + 1;
+					}
 				}
 				grid.at<Point2f>(col,row) = final_points[j];
 				row = row + 1;
@@ -154,14 +158,13 @@ int main(int argc, char** argv)
 				for(int k = num; k > 0; --k){
 					extrap.x = prev2.x;
 					extrap.y = prev2.y + 100;
-					gird.at<Point2f>(col,row) = extrap;
+					grid.at<Point2f>(col,row) = extrap;
 					prev2.x = extrap.x;
 					prev2.y = extrap.y;
 					row = row + 1;
 				}
 			}
 		}
-
 		col = col + 1;
 		row = 0;
 		final_points.clear();
