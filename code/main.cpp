@@ -9,22 +9,22 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fstream>
+#include "observepieces.h"
 using namespace cv;
 using namespace std;
 
 int main(int argc, char** argv)
 {
-/*
+
   cv::CommandLineParser parser(argc, argv,
       "{help h ||}{@image|../data/board.jpg|}"
       );
   string filename = parser.get<string>("@image");
-  if (filename.empty())
+  if (!filename.empty())
   {
-    cout << "no image_name provided" << endl;
-    return -1;
+    observePieces(filename,-1);  
   }
-*/  
+ 
 	// initialize the vector with empty coordinates
 	std::vector<Coordinate> unoccupied_spaces;
 	for(int i = 0; i < GRID_LENGTH; ++i) {
