@@ -39,7 +39,8 @@ Gomoku::Gomoku() {
 	// 	assert(0);
 
 	// begin code to take empty board image
-	system("raspistill -t 1000 -n -o empty.jpg");	
+	system("raspistill -t 1000 -n -o empty.jpg");
+	system("raspistill -t 1000 -n -o move.jpg");	
 	if(!populateGridEdges("empty.jpg", board))
 		assert(0);
 
@@ -561,8 +562,8 @@ bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
 	//TODO: observe previous gamestate, and make sure the delta is only 1 
 	//spot prevBoard[GRID_LENGTH][GRID_LENGTH];
 
-	//	vector<compositeCircle> knownCircles = observePieces(filename,numMovesPlayed+1 );
-	vector<compositeCircle> knownCircles = observePieces(filename,-1 );
+	vector<compositeCircle> knownCircles = observePieces(filename,numMovesPlayed+1 );
+	//vector<compositeCircle> knownCircles = observePieces(filename,-1 );
 
 
 
@@ -587,10 +588,18 @@ bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
 			}
 		}
 		if(board[minX][minY].owner == blank){
+
+			if(knownCircles[i].color != PLAYER_COLOR){
+				cout << "computer was moved to the wrong spot, error " << endl; 
+				cout << " computer spot that we found is at location: " << minX << "," << minY << endl;	
+				return false;
+			}	
+
 			if(foundPiece ==true){
 				cout << "found more than one piece in populateBoard " << endl;
-			  cout << "please make sure only one piece was played " << endl;
-			  return false;  
+				cout << "please make sure only one piece was played " << endl;
+				cout << " second spot that we found is at location: " << minX << "," << minY << endl;			
+				return false;  
 			}
 			foundPiece = true;	
 			enemyMove.x = minX;
@@ -598,10 +607,7 @@ bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
 			coords.x = minX;
 			coords.y = minY;
 			foundColor = knownCircles[i].color;
-			if(knownCircles[i].color != PLAYER_COLOR){
-				cout << "computer was moved to the wrong spot, error " << endl; 
-				return false;
-			}	
+
 			cout << "detected piece placed at " << minY << "," << minX << endl;
 		}	
 	}
