@@ -19,7 +19,7 @@
 
 //stores threats for the AI
 using namespace std;
-enum ThreatType{three=2, bthree=1,four=3,sfour=4,five=5,none=0 };
+enum ThreatType{three=7, bthree=3,four=8,sfour=14,five=15,none=0 };
 
 //assume the opponent can do all cost squares at once
 //proceed by first making gain move, and then apply all cost moves  
@@ -27,9 +27,18 @@ class Threat {
   private:
     void setWinning(){
       winningDepth = -1; 
-      if(type == sfour || type == five){
+      if(type == five){
         winningThreat = true;
         winningDepth = layersDeep;
+      }
+      else if(type== sfour){
+        winningThreat = true;
+        
+        //if we don't set winning depth to +1 in the sfour case
+        //then the ai evaluates itself as being able to win
+        //too early in some cases, and doesn't block player move
+        //
+        winningDepth = layersDeep + 1;
       }
       else
         winningThreat = false;

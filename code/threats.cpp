@@ -15,16 +15,18 @@ inline bool isUnique(Threat posThreat, vector<Threat> &curThreats){
   }
   return unique;
 }
+
 float Threat::selfEvaluation(){
   //look at our threat type, and how many children we have, and the types of our children
   int numChildren = children.size(); 
   float total = 0;
+  total = type;
   for(int i = 0; i < numChildren; ++i){
-    total+=(children[i].type/2.0);
+    total+= .75*children[i].selfEvaluation();
   }
-  total+=numChildren + 2.0*type;
   return  total;
 }
+
 potentialMove findBestMove(vector<Threat> &curThreats){
   float maxThreat =-1;
   int maxIndex = 0;
@@ -169,9 +171,15 @@ void Threat::findChildThreats(int depth){
   else
     opp = black; 
   cout << "finding children with " << numCosts << " costs " << endl;
-  for(int i =0; i < numCosts; ++i){
+  
+  //only play the cost squares if we are the computer, we don't want
+  //to be too generous with our defense
+  if(player == AI_COLOR){
+    for(int i =0; i < numCosts; ++i){
       board[costSquare[i].x][costSquare[i].y].owner = opp;
+    }
   }
+  
   Coordinate curMove = gainSquare; 
   cout << " about to evaluate child threats at depth "<< depth << endl; 
   if(depth==0 || winningThreat){
@@ -276,6 +284,17 @@ void Threat::findChildThreats(int depth){
                 emptyBoundaries++;
                 freeBoundaries.push_back(boundaryLoc);
               }
+              if(board[boundaryLoc.x][boundaryLoc.y].owner == player){
+                //if our boundary is a friendly piece, then we need to make a five threat immediately
+                cout << "ENTERED THE BOUNDARY CASE";
+                cout << "\n creating five threat at: (" << freeSpaces[0].x <<"," << freeSpaces[0].y << ")" << endl;    
+                Threat fiveThreat(this,five); 
+                //set this threat
+
+                fiveThreat.setValue(freeSpaces[0], NULL, 0);
+                if(isNewThreat(fiveThreat)) 
+                  children.push_back(fiveThreat);
+              }
             }
             boundaryLoc = endLoc;
             if(boundaryLoc.increment(curDir,1) ){
@@ -283,6 +302,17 @@ void Threat::findChildThreats(int depth){
               if(board[boundaryLoc.x][boundaryLoc.y].owner == blank){
                 emptyBoundaries++;
                 freeBoundaries.push_back(boundaryLoc);
+              }
+              if(board[boundaryLoc.x][boundaryLoc.y].owner == player){
+                //if our boundary is a friendly piece, then we need to make a five threat immediately
+
+                cout << "ENTERED THE BOUNDARY CASE";
+                cout << "\n creating five threat at: (" << freeSpaces[0].x <<"," << freeSpaces[0].y << ")" << endl;
+                Threat fiveThreat(this,five); 
+                //set this threat
+                fiveThreat.setValue(freeSpaces[0], NULL, 0);
+                if(isNewThreat(fiveThreat)) 
+                  children.push_back(fiveThreat);
               }
             }
             if(emptyBoundaries==2){
@@ -324,16 +354,7 @@ void Threat::findChildThreats(int depth){
                 freeBoundaries.push_back(boundaryLoc); 
                 emptyBoundaries++;
               }
-              /*
-                 if(boundaryLoc.decrement(curDir,1) ){
-            //check to see if our boundary is empty  
-            if(board[boundaryLoc.x][boundaryLoc.y] == blank){
-            freeBoundaries.push_back(boundaryLoc); 
-            emptyBoundaries++;
-            }
-            }
-            */
-
+              
             }
             boundaryLoc = endLoc;
             if(boundaryLoc.increment(curDir,1) ){
@@ -342,15 +363,7 @@ void Threat::findChildThreats(int depth){
                 freeBoundaries.push_back(boundaryLoc);
                 emptyBoundaries++;
               }
-              /*
-                 if(boundaryLoc.increment(curDir,1) ){
-            //check to see if our boundary is empty  
-            if(board[boundaryLoc.x][boundaryLoc.y] == blank){
-            freeBoundaries.push_back(boundaryLoc); 
-            emptyBoundaries++;
-            }
-            }
-            */
+             
             }
             if(emptyBoundaries==2){
               //we can make some threes, 
@@ -557,6 +570,17 @@ void findInitThreats(Coordinate curMove, vector<Threat> &curThreats, spot board[
                 emptyBoundaries++;
                 freeBoundaries.push_back(boundaryLoc);
               }
+              if(board[boundaryLoc.x][boundaryLoc.y].owner == myColor){
+                //if our boundary is a friendly piece, then we need to make a five threat immediately
+                cout << "ENTERED THE BOUNDARY CASE";
+                cout << "\n creating five threat at: (" << freeSpaces[0].x <<"," << freeSpaces[0].y << ")" << endl;
+
+                Threat fiveThreat(five,board,myColor); 
+                //set this threat
+                fiveThreat.setValue(freeSpaces[0], NULL, 0);
+                if(isUnique(fiveThreat,curThreats)) 
+                  curThreats.push_back(fiveThreat);
+              }
             }
             boundaryLoc = endLoc;
             if(boundaryLoc.increment(curDir,1) ){
@@ -564,6 +588,16 @@ void findInitThreats(Coordinate curMove, vector<Threat> &curThreats, spot board[
               if(board[boundaryLoc.x][boundaryLoc.y].owner == blank){
                 emptyBoundaries++;
                 freeBoundaries.push_back(boundaryLoc);
+              }
+              if(board[boundaryLoc.x][boundaryLoc.y].owner == myColor){
+                //if our boundary is a friendly piece, then we need to make a five threat immediately
+                cout << "ENTERED THE BOUNDARY CASE";
+                cout << "\n creating five threat at: (" << freeSpaces[0].x <<"," << freeSpaces[0].y << ")" << endl;
+                Threat fiveThreat(five,board,myColor); 
+                //set this threat
+                fiveThreat.setValue(freeSpaces[0], NULL, 0);
+                if(isUnique(fiveThreat,curThreats)) 
+                  curThreats.push_back(fiveThreat);
               }
             }
             if(emptyBoundaries==2){

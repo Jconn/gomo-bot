@@ -96,7 +96,7 @@ Coordinate Gomoku::getAIMove(){
 	}
   else{
     cout << "myMoves size is " << myMoves.size() << endl;
-    if(myMoves.size() < 3){
+    if(myMoves.size() < 2){
       cout << "going into opening playbook" << endl; 
       for(unsigned int i = 0; i < openingPlaybook.size(); ++i){
         if(isFree(openingPlaybook[i])){
@@ -141,7 +141,7 @@ Coordinate Gomoku::getAIMove(){
       }
       else if(offThreat.isWinning)
         myMoves.push_back(offThreat.move);
-      else if(defThreat.isWinning && defThreat.depth==0)
+      else if(defThreat.isWinning && defThreat.depth<=1)
         myMoves.push_back(defThreat.move);
       else
         myMoves.push_back(offThreat.move);
@@ -224,12 +224,29 @@ potentialMove Gomoku::getDefense(){
 	for(unsigned int i = 0; i < enemyMoves.size(); ++i){ 
 		findInitThreats(enemyMoves[i],threats,board,PLAYER_COLOR);
 	}
+ 
 	for(int i = 0; i < static_cast<int>(threats.size()); ++i){
 		if(threats[i].winningThreat){
 			return threats[i].returnMove();
 		}
 	}
-	Coordinate bestDef;
+  
+  for(unsigned int i = 0; i < threats.size(); ++i){
+    threats[i].printThreat(); 
+    threats[i].findChildThreats(5); 
+  }
+
+  int bestIndex = -1;
+  int bestDepth = 0;
+  for(int i = 0; i < static_cast<int>(threats.size()); ++i){
+    if(threats[i].winningThreat && threats[i].winningDepth > bestDepth){
+      bestIndex = i;
+      bestDepth = threats[i].winningDepth;
+    }
+  }
+  if(bestIndex >=0)
+    return (threats[bestIndex]).returnMove();
+
 
   //after we've found the list of threats that the enemy has,
   //we use a heuristic to determine the most damaging threat
@@ -280,8 +297,6 @@ potentialMove Gomoku::getAttack(){
 	cout <<"detected " << threats.size() << " initial threats " << endl;
   
   
-  //didn't find a winning move, populate 10 layers of 
-  //the threat tree
   for(unsigned int i = 0; i < threats.size(); ++i){
 		threats[i].printThreat(); 
 		threats[i].findChildThreats(5); 
