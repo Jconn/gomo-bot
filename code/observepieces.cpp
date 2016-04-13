@@ -54,52 +54,55 @@ vector <compositeCircle> observePieces(string filename, int expectedPieces)
   //cvtColor(img, curImg, CV_RGB2GRAY,1);
   Mat cimg;
   vector <compositeCircle> known_circles; 
-  for(int v = 0; v < 3; ++v){	
-    curImg = imageVec[v]; 
-    for(int j =3; j < 25; j+=2) { 
-      //cout << "Trying gaussian blur of size " << j << endl;
-      if((int)known_circles.size() == expectedPieces)
-        break;
-      if(j==9 && expectedPieces < 0)
-        break;
-      for (int i = 1; i < 4; i+=1){
-        GaussianBlur(curImg, cimg,Size(j,j), i,i);
-        vector<Vec3f> circles;
-        HoughCircles(cimg, circles, HOUGH_GRADIENT, 1, 10,
-            100, 30, 30, 60 // change the last two parameters
-            // (min_radius & max_radius) to detect larger circles
-            );
-        for(size_t i = 0; i< circles.size(); ++i){
-          bool merged = false;
-          Vec3i curCircle = circles[i]; 
-          for(size_t j = 0; j < known_circles.size(); ++j){
-            Vec3i knownCircle = known_circles[j].circle;
-            float centerDist = sqrt(pow(curCircle[0] - knownCircle[0],2) +
-                pow(curCircle[1] - knownCircle[1],2));  
-            if(centerDist < curCircle[2] || centerDist < knownCircle[2]){
-              //the circles are the same, combine them
-              int nc = known_circles[j].numCombines;
-              knownCircle[0] = (nc*knownCircle[0]+curCircle[0])/(nc+1.0);
-              knownCircle[1] = (nc*knownCircle[1]+curCircle[1])/(nc+1.0);
-              knownCircle[2] = (nc*knownCircle[2]+curCircle[2])/(nc+1.0);
-              known_circles[j].numCombines = nc + 1;
-              known_circles[j].circle = knownCircle;
-              merged = true; 
-              break; 
-            }
-          }
-          if(!merged) {  
-            compositeCircle newCircle; 
-            newCircle.circle = curCircle;
-            newCircle.numCombines = 1;
-            known_circles.push_back(newCircle);
-          }
-        }
-      }
-    }
-  }
 
-  Vec3b meanBlack = {25,25,25};
+	for(int j =3; j < 25; j+=2) { 
+		for(int v = 0; v < 3; ++v){	
+			curImg = imageVec[v]; 
+
+			cout << "Trying gaussian blur of size " << j << endl;
+			cout << " number of detected pieces is " << known_circles.size() << endl;
+			if((int)known_circles.size() == expectedPieces)
+				break;
+			if(j==9 && expectedPieces < 0)
+				break;
+			for (int i = 1; i < 4; i+=1){
+				GaussianBlur(curImg, cimg,Size(j,j), i,i);
+				vector<Vec3f> circles;
+				HoughCircles(cimg, circles, HOUGH_GRADIENT, 1, 10,
+						100, 30, 30, 60 // change the last two parameters
+						// (min_radius & max_radius) to detect larger circles
+						);
+				for(size_t i = 0; i< circles.size(); ++i){
+					bool merged = false;
+					Vec3i curCircle = circles[i]; 
+					for(size_t j = 0; j < known_circles.size(); ++j){
+						Vec3i knownCircle = known_circles[j].circle;
+						float centerDist = sqrt(pow(curCircle[0] - knownCircle[0],2) +
+								pow(curCircle[1] - knownCircle[1],2));  
+						if(centerDist < curCircle[2] || centerDist < knownCircle[2]){
+							//the circles are the same, combine them
+							int nc = known_circles[j].numCombines;
+							knownCircle[0] = (nc*knownCircle[0]+curCircle[0])/(nc+1.0);
+							knownCircle[1] = (nc*knownCircle[1]+curCircle[1])/(nc+1.0);
+							knownCircle[2] = (nc*knownCircle[2]+curCircle[2])/(nc+1.0);
+							known_circles[j].numCombines = nc + 1;
+							known_circles[j].circle = knownCircle;
+							merged = true; 
+							break; 
+						}
+					}
+					if(!merged) {  
+						compositeCircle newCircle; 
+						newCircle.circle = curCircle;
+						newCircle.numCombines = 1;
+						known_circles.push_back(newCircle);
+					}
+				}
+			}
+		}
+	}
+
+	Vec3b meanBlack = {25,25,25};
   Vec3b meanWhite = {150,150,150};
   Vec3b meanGreen = {0,160,85};
   Vec3b meanRed = {0,75,150};

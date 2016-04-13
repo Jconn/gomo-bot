@@ -115,7 +115,7 @@ int populateGridEdges(string filename, spot (&board)[GRID_LENGTH][GRID_LENGTH])
 					for(int p = num2; p > 0; --p){
 						extrap.x = final_points[0].x;
 						extrap.y = final_points[0].y - p*100;
-//            if(row>18) break;
+            if(row>18) break;
             grid.at<Point2f>(col,row) = extrap;
 						row = row + 1;
 					}

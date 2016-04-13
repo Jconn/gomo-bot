@@ -50,7 +50,13 @@ int main(int argc, char** argv)
 
     if(game.winningMove(mostRecentMove)) {
       std::cout << "a computer wins!\n"; // TODO: update this
-      game.setGameEnded();
+   		 
+			Mat lose;			
+      if( !(lose=imread("lose.jpg", CV_LOAD_IMAGE_COLOR)).data)
+        return 0;
+    	imshow("You lose!", lose);
+    
+			game.setGameEnded();
       break;
     }
 
@@ -80,7 +86,12 @@ int main(int argc, char** argv)
     // check if game is won 
     if(game.winningMove(enemyMove)) {
       std::cout << "a player wins!\n"; // TODO: update this
-      game.setGameEnded();
+			Mat win;			
+      if( !(win=imread("win.jpg", CV_LOAD_IMAGE_COLOR)).data)
+        return 0;
+    	imshow("You win!", win);
+      
+			game.setGameEnded();
       break;
     }
 

@@ -199,8 +199,8 @@ void Gomoku::setAIMove(Coordinate &coord){
 		board[coord.x][coord.y].owner = AI_COLOR;
 		
   	//Call UI
-	  //Mat src = imread("move.jpg", 0); 
-		//UI(src, coord, board);
+	  Mat src = imread("move.jpg", 0); 
+		UI(src, coord, board);
 	}
 	incrementNumMovesPlayed();
 }
