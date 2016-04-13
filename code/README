@@ -1,0 +1,32 @@
+so you want to know how the game loop works
+
+
+Here is the current flow of control:
+
+-Gomoku::Gomoku() is called
+this initializes the board for the game by taking a picture
+of the board and calling our edge detection function. 
+This associates one coordinate with each position in our game board.
+Then, main loops until a winner is determined or there is a draw.
+
+In the loop, we call Gomoku::getAIMove() to determine 
+how the computer will move. This function performs differently 
+depending on the mode that the AI was initialized to(random, defensive,intelligent)
+After the computer move is decided, we show the user an image
+with the computer's move indicated on that image, so that the
+user can place the computer's move. 
+Then, the user places their own move and indicates that to the system.
+After the user has moved, we take a picture of the board
+and call Gomoku::populateBoard using the image that we just captured, and update the internal game state based on the user move.
+
+That encompasses one iteration of the game loop.
+This will repeat until a winner is determined or there is a draw.
+
+
+
+To see how the the board is populated with the location of each point, visit grid.cpp and populateGridEdges()
+
+To see how pieces are detected, visit observePieces.cpp and look at observePieces()
+
+To see how the AI move is decided, visit Gomoku.cpp, and look at Gomoku::getAIMove(), Gomoku::getAttack(), and Gomoku::getDefense()
+
