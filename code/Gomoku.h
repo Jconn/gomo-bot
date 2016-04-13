@@ -16,23 +16,32 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "threats.h"
 #include "Spot.h"
+
+const int NUM_OPENING_PLAYBOOK_MOVES = 9;
+
 using namespace std;
 using namespace cv;
 
 struct compositeCircle{
 	Vec3i circle;
-	int numCombines;
+	int numCombines; // number of times we combine circles that are too close together
 	MoveType color;
 };
 
 enum AI{randomAI,defensive,offensive}; 
 
 class Gomoku{
-	MoveType myColor;
+	// game meta-data
 	int numMovesPlayed;
 	bool winnerDetermined;
-	spot board[GRID_LENGTH][GRID_LENGTH]; // (0,0) corresponds to the top left of the board
+<<<<<<< HEAD
+	bool gameEnded; 	// 2 ways for gameEnded to be true:
+						// (1) before all grid squares are filled, one player gets 5 in a row
+						// (2) all grid squares filled without a player getting 5 in a row
 
+	// internal representation of board
+	Spot board[GRID_LENGTH][GRID_LENGTH]; // (0,0) corresponds to the top left of the board
+	
   //vector that stores all the moves the computer has made
   vector <Coordinate> myMoves;
 
@@ -43,16 +52,24 @@ class Gomoku{
   //vector that stores the initial moves the computer considers
   vector <Coordinate> openingPlaybook;
 
-  // 2 ways for gameEnded to be true:
-	// (1) before all grid squares are filled, one player gets 5 in a row
-	// (2) all grid squares filled without a player getting 5 in a row
-	bool gameEnded; 
 	bool withinRegion( Coordinate point, spot curSpot);
+
 	AI myMode = defensive; 
 	void setAIMove(Coordinate &coord); 
 
 	public:
+	
+	// getter-setter pairs for private members
+	int getNumMovesPlayed() const {return numMovesPlayed;}
+	void incrementNumMovesPlayed() {numMovesPlayed++;}
+	
+	bool getWinnerDetermined() const {return winnerDetermined;}
+	void setWinnerDetermined() {winnerDetermined = true;}
 
+	bool isEnded() const {return gameEnded;}
+	void setGameEnded() {gameEnded = true;}
+
+	// constructor
 	Gomoku();
   
 
@@ -115,27 +132,21 @@ class Gomoku{
   //////////////////////////////////////////////////////////////////////////////////
   // start winningMove functions
   //////////////////////////////////////////////////////////////////////////////////
-	bool winningMove(Coordinate most_recent_move);
 
+	// function determining winning move & its helpers
+	bool winningMove(Coordinate most_recent_move);
 	bool fiveHorizontally(Coordinate coord);
 	void checkLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
 	void checkRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
-
 	bool fiveVertically(Coordinate coord);
 	void checkAboveMove(Coordinate coord, int& num_tiles_in_a_row);
 	void checkBelowMove(Coordinate coord, int& num_tiles_in_a_row);
-
 	bool fiveDiagonally(Coordinate coord);
 	void checkAboveAndRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
 	void checkBelowAndLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
-
 	bool fiveAntiDiagonally(Coordinate coord);
 	void checkAboveAndLeftOfMove(Coordinate coord, int& num_tiles_in_a_row);
 	void checkBelowAndRightOfMove(Coordinate coord, int& num_tiles_in_a_row);
-
-	//////////////////////////////////////////////////////////////////////////////////
-	// end winningMove functions
-	//////////////////////////////////////////////////////////////////////////////////
 
 	// testing functions
 	void setMove(int x, int y, MoveType type);
