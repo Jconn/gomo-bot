@@ -16,6 +16,10 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "threats.h"
 #include "Spot.h"
+
+#include "threatMove.h"
+
+
 using namespace std;
 using namespace cv;
 
@@ -25,7 +29,7 @@ struct compositeCircle{
 	MoveType color;
 };
 
-enum AI{randomAI,defensive,offensive}; 
+enum AI{randomAI,defensive,intelligent}; 
 
 class Gomoku{
 	MoveType myColor;
@@ -48,7 +52,7 @@ class Gomoku{
 	// (2) all grid squares filled without a player getting 5 in a row
 	bool gameEnded; 
 	bool withinRegion( Coordinate point, spot curSpot);
-	AI myMode = defensive; 
+	AI myMode = intelligent; 
 	void setAIMove(Coordinate &coord); 
 
 	public:
@@ -64,10 +68,10 @@ class Gomoku{
   Coordinate getAIMove();
 
   //function that gets the defensive mode move
-  Coordinate getDefense();
+  potentialMove getDefense();
 
   //function that gets the intelligent mode move
-  Coordinate getAttack();
+  potentialMove getAttack();
   
   //function that gets the random mode move
   Coordinate getRandomAIMove(vector<Coordinate>& us);

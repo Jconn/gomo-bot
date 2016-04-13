@@ -1,5 +1,5 @@
 #include "threats.h" 
-
+#include "threatMove.h"
 
 
 //pass in your gain square to this fn 
@@ -25,7 +25,7 @@ float Threat::selfEvaluation(){
   total+=numChildren + 2.0*type;
   return  total;
 }
-Coordinate findBestMove(vector<Threat> &curThreats){
+potentialMove findBestMove(vector<Threat> &curThreats){
   float maxThreat =-1;
   int maxIndex = 0;
   for(int i =0; i < (int)curThreats.size(); ++i){
@@ -34,26 +34,23 @@ Coordinate findBestMove(vector<Threat> &curThreats){
       maxIndex = i;
     }
   }
-  return curThreats[maxIndex].gainSquare;
+  return curThreats[maxIndex].returnMove();
 } 
 
-bool findBestDefense(vector<Threat> &curThreats, Coordinate &move){
-  float maxThreat =-1;
-  int maxIndex = 0;
-  for(int i =0; i < (int)curThreats.size(); ++i){
-    if(curThreats[i].selfEvaluation() > maxThreat){
-      maxThreat = curThreats[i].selfEvaluation();
-      maxIndex = i;
-    }
-  }
-  assert(curThreats[maxIndex].numCosts > 0);
-  if(maxThreat <= 2)
-    return false;
-  move.x = curThreats[maxIndex].gainSquare.x;
-  move.y = curThreats[maxIndex].gainSquare.y;
-  return true; 
+Threat::Threat(){
+
+
 }
 
+potentialMove Threat::returnMove(){
+  potentialMove newMove;
+  newMove.move = this->gainSquare;
+  newMove.isWinning = this->winningThreat;
+  newMove.depth = 180;
+  if(winningThreat)
+    newMove.depth = this->winningDepth;
+  return newMove;
+}
 Threat::Threat(int x, int y, spot gameState[GRID_LENGTH][GRID_LENGTH])
 {
   //the constructor you call when the ai is in a bad spot
@@ -118,7 +115,10 @@ Threat::Threat(Threat * const parent,ThreatType myType )
     type(myType),
     player(parent->player)
 {
+  layersDeep = parent->layersDeep + 1;
+  setWinning();
 }
+
 void Threat::setValue(Coordinate gain, Coordinate *costs, int _numCosts){
   gainSquare = gain; 
   numCosts = _numCosts;
@@ -155,6 +155,7 @@ void Threat::printThreat(){
 }
 
 void Threat::findChildThreats(int depth){
+  cout << " my depth is  " << this->layersDeep << endl;
   //loop through the previous move, determine if there are any threats, make sure they are not 
   //threats that we already have,
   //then update it as a new threat
@@ -177,7 +178,7 @@ void Threat::findChildThreats(int depth){
     cout << " exiting early " << endl; 
     if(winningThreat){      
       cout << "found a winning threat " << endl;
-      winningDepth = depth; 
+ 
     }
     if(!depth)
       cout << "reached end of threat search " << endl;
@@ -449,6 +450,7 @@ void Threat::findChildThreats(int depth){
   for(unsigned i = 0; i < children.size(); ++i){
     if(children[i].winningThreat == true)
       winningThreat = true;
+      winningDepth = children[i].winningDepth;
   }
 }
 

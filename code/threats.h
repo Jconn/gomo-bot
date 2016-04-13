@@ -15,7 +15,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "Spot.h"
-
+#include "threatMove.h"
 
 //stores threats for the AI
 using namespace std;
@@ -27,8 +27,10 @@ class Threat {
   private:
     void setWinning(){
       winningDepth = -1; 
-      if(type == sfour || type == five)
+      if(type == sfour || type == five){
         winningThreat = true;
+        winningDepth = layersDeep;
+      }
       else
         winningThreat = false;
     }
@@ -45,6 +47,7 @@ class Threat {
     spot board[GRID_LENGTH][GRID_LENGTH]; 
     float selfEvaluation(); 
     MoveType player;
+    potentialMove returnMove(); 
     Threat(ThreatType myType);
     Threat(int x, int y, spot gameState[GRID_LENGTH][GRID_LENGTH]);
     bool winningThreat;
@@ -52,6 +55,7 @@ class Threat {
     bool isNewThreat(Threat &discoveredThreat); 
     void findChildThreats(int depth);
     void setThreatList(vector<Threat*> curThreats); 
+    int layersDeep=0;
     Threat
       (
        ThreatType myType, //the type of threat we are
@@ -70,6 +74,7 @@ class Threat {
     //populate the child threats vec
 
     Threat(Threat * const parent,ThreatType myType);
+    Threat();
     void setValue(Coordinate gain, Coordinate *costs, int _numCosts);
 
 };
@@ -99,8 +104,7 @@ inline bool operator!=(const Threat&  lhs, const Threat& rhs){
 } 
 
 extern void findInitThreats(Coordinate curMove, vector<Threat> &curThreats, spot board[GRID_LENGTH][GRID_LENGTH],MoveType player);
-extern Coordinate findBestMove(vector<Threat> &curThreats);
-extern bool findBestDefense(vector<Threat> &curThreats, Coordinate &move);
+extern potentialMove findBestMove(vector<Threat> &curThreats);
 
 
 #endif

@@ -19,6 +19,9 @@
 #include "observepieces.h"
 #include "UI.cpp"
 
+#include "threatMove.h"
+
+
 using namespace std;
 using namespace cv;
 
@@ -88,16 +91,63 @@ Coordinate Gomoku::getAIMove(){
 		//myMoves.push_back(getRandomAIMove(NULL));
 		curMove = myMoves[myMoves.size()-1];
 	}
-	if(myMode == defensive){
-		myMoves.push_back(getDefense());
-		curMove = myMoves[myMoves.size()-1];
-	}
-	if(myMode == offensive){
-		myMoves.push_back(getAttack());
-		curMove = myMoves[myMoves.size()-1]; 
-	}
-	curMove = myMoves[myMoves.size()-1];
-	setAIMove(curMove);
+  else{
+    cout << "myMoves size is " << myMoves.size() << endl;
+    if(myMoves.size() < 3){
+      cout << "going into opening playbook" << endl; 
+      for(unsigned int i = 0; i < openingPlaybook.size(); ++i){
+        if(isFree(openingPlaybook[i])){
+          cout << "moving to " << openingPlaybook[i].x <<"," << openingPlaybook[i].y << endl; 
+          myMoves.push_back(openingPlaybook[i]);
+          setAIMove(myMoves[myMoves.size()-1]);
+          return myMoves[myMoves.size()-1];
+        }
+      }
+    }
+
+    potentialMove defThreat;
+    potentialMove offThreat;
+    if(myMode == defensive){
+      defThreat= getDefense();
+      myMoves.push_back(defThreat.move);
+      curMove = myMoves[myMoves.size()-1];
+    }
+    if(myMode == intelligent){
+      defThreat = getDefense();
+      offThreat = getAttack();
+      
+      cout << " best defensive threat found: ";
+      cout << " location is: ("<<defThreat.move.x << "," << defThreat.move.y << ")" << endl;
+      cout << "winnning is: " << defThreat.isWinning << endl;
+      if(defThreat.isWinning)
+        cout << "winnning depth is: " << defThreat.depth << endl;
+
+      cout << " best offensive threat found: ";
+        cout << " location is: ("<<offThreat.move.x << "," << offThreat.move.y << ")" << endl;
+      cout << "winnning is: " << offThreat.isWinning << endl;
+      if(offThreat.isWinning)
+        cout << "winnning depth is: " << offThreat.depth << endl;
+
+
+      if(defThreat.isWinning && offThreat.isWinning){
+        cout << " found a winning and losing threat" << endl;
+        if(offThreat.depth <= defThreat.depth)
+          myMoves.push_back(offThreat.move);
+        else
+          myMoves.push_back(defThreat.move);
+      }
+      else if(offThreat.isWinning)
+        myMoves.push_back(offThreat.move);
+      else if(defThreat.isWinning && defThreat.depth==0)
+        myMoves.push_back(defThreat.move);
+      else
+        myMoves.push_back(offThreat.move);
+      assert(myMoves.size());
+      curMove = myMoves[myMoves.size()-1]; 
+    }
+  }
+  curMove = myMoves[myMoves.size()-1];
+  setAIMove(curMove);
   
 	return curMove;}
 
@@ -148,27 +198,19 @@ void Gomoku::setAIMove(Coordinate &coord){
 		board[coord.x][coord.y].owner = AI_COLOR;
 		
   	//Call UI
-	  Mat src = imread("move.jpg", 0); 
-		UI(src, coord, board);
+	  //Mat src = imread("move.jpg", 0); 
+		//UI(src, coord, board);
 	}
 	incrementNumMovesPlayed();
 }
-Coordinate Gomoku::getDefense(){
+potentialMove Gomoku::getDefense(){
 	//we have the board, loop through our spaces, and find threats that we have,
   //but at the start of our play, just follow the playbook
   //	cout << "enemyMoves size is " << enemyMoves.size() << endl;
 
   //check to see if we've made less than 2 moves, and if so, 
   //make a move based on the playbook
-  if(myMoves.size() < 2){
-    cout << "going into opening playbook" << endl; 
-		for(unsigned int i = 0; i < openingPlaybook.size(); ++i){
-			if(isFree(openingPlaybook[i])){
-				cout << "moving to " << openingPlaybook[i].x <<"," << openingPlaybook[i].y << endl; 
-				return openingPlaybook[i]; 
-			}
-		}
-	}
+ 
 	vector <Threat> threats;
 
 
@@ -182,7 +224,7 @@ Coordinate Gomoku::getDefense(){
 	}
 	for(int i = 0; i < static_cast<int>(threats.size()); ++i){
 		if(threats[i].winningThreat){
-			return threats[i].gainSquare;
+			return threats[i].returnMove();
 		}
 	}
 	Coordinate bestDef;
@@ -194,27 +236,17 @@ Coordinate Gomoku::getDefense(){
   //If we can't find a good defensive move to be made, 
   //then we call getAttack() to get the best attack move 
   if( threats.size() > 0){ 
-		if(findBestDefense(threats,bestDef))
-			return bestDef;
-		else
-			return getAttack();
+    return (findBestMove(threats));
 	}
+
+  //if we couldn't spot any threats by enemy, just make an attack move
 	return getAttack();
 }
 
-Coordinate Gomoku::getAttack(){
+potentialMove Gomoku::getAttack(){
 	//we have the board, loop through our spaces, and find threats that we have,
 	//but at the start of our play, just follow the playbook
-	cout << "myMoves size is " << myMoves.size() << endl;
-	if(myMoves.size() < 3){
-		cout << "going into opening playbook" << endl; 
-		for(unsigned int i = 0; i < openingPlaybook.size(); ++i){
-			if(isFree(openingPlaybook[i])){
-				cout << "moving to " << openingPlaybook[i].x <<"," << openingPlaybook[i].y << endl; 
-				return openingPlaybook[i]; 
-			}
-		}
-	}
+
 
   //find initial threats that the computer can make
 	vector <Threat> threats;  
@@ -227,7 +259,7 @@ Coordinate Gomoku::getAttack(){
   //then return that immediately
 	for(int i = 0; i < static_cast<int>(threats.size()); ++i){
 		if(threats[i].winningThreat){
-			return threats[i].gainSquare;
+			return threats[i].returnMove();
 		}
 	}
 
@@ -249,7 +281,7 @@ Coordinate Gomoku::getAttack(){
   //the threat tree
   for(unsigned int i = 0; i < threats.size(); ++i){
 		threats[i].printThreat(); 
-		threats[i].findChildThreats(10); 
+		threats[i].findChildThreats(5); 
 	}
 	cout << " finished child threats " << endl;
 	int bestDepth = -1;
@@ -265,8 +297,7 @@ Coordinate Gomoku::getAttack(){
 		}
 	}
 	if(bestIndex >=0)
-		return threats[bestIndex].gainSquare;
-
+		return (threats[bestIndex]).returnMove();
 
 	if( threats.size() > 0) 
 		return findBestMove(threats);
@@ -298,24 +329,8 @@ Coordinate Gomoku::getAttack(){
   //if we find a threat, then call findBestMove(),
   //which is a heuristic to determine the best threat
   //we can make
-	if( threats.size() > 0) 
-		return findBestMove(threats);
-
-
-  //TODO: determine if this is necessary
-	if(myMoves.size() < 3){
-		cout << "going into opening playbook" << endl; 
-		for(unsigned int i = 0; i < openingPlaybook.size(); ++i){
-			if(isFree(openingPlaybook[i])){
-				cout << "moving to " << openingPlaybook[i].x <<"," << openingPlaybook[i].y << endl; 
-				return openingPlaybook[i]; 
-			}
-		}
-	}
-	assert(0);
-	//TODO: fix this return
-	return openingPlaybook[0];
-	//we have completed our opening moves, now determine what threats we have
+  assert(threats.size());
+  return findBestMove(threats);
 }
 
 
