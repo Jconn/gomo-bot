@@ -32,11 +32,18 @@ class Gomoku{
 	int numMovesPlayed;
 	bool winnerDetermined;
 	spot board[GRID_LENGTH][GRID_LENGTH]; // (0,0) corresponds to the top left of the board
-	vector <Coordinate> myMoves;
-	vector <Coordinate> openingPlaybook;
-	vector <Coordinate> enemyMoves;
 
-	// 2 ways for gameEnded to be true:
+  //vector that stores all the moves the computer has made
+  vector <Coordinate> myMoves;
+
+  //vector that stores all moves the human player has made
+  //TODO: extend this to multiple human players, for multi-player
+  vector <Coordinate> enemyMoves;
+
+  //vector that stores the initial moves the computer considers
+  vector <Coordinate> openingPlaybook;
+
+  // 2 ways for gameEnded to be true:
 	// (1) before all grid squares are filled, one player gets 5 in a row
 	// (2) all grid squares filled without a player getting 5 in a row
 	bool gameEnded; 
@@ -47,26 +54,67 @@ class Gomoku{
 	public:
 
 	Gomoku();
-	Coordinate getAIMove();
-	Coordinate getDefense();
-	void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
-	bool populateBoard(string filename, Coordinate &enemyMove);
-	bool getWinnerDetermined() const {return winnerDetermined;}
-	void setWinnerDetermined() {winnerDetermined = true;}
-	Coordinate getHumanMove(vector<Coordinate>& us);
-	//void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
-	int getNumMovesPlayed() const {return numMovesPlayed;}
-	void incrementNumMovesPlayed() {numMovesPlayed++;}
-	Coordinate getAttack();
-	bool isEnded() const {return gameEnded;} // getter paired w/ setGameEnded
-	void setGameEnded() {gameEnded = true;}
-	bool isDraw();
-	Coordinate getRandomAIMove(vector<Coordinate>& us);
-	void populatePlaybook();
-	bool isFree(Coordinate location); 
-	//////////////////////////////////////////////////////////////////////////////////
-	// start winningMove functions
-	//////////////////////////////////////////////////////////////////////////////////
+  
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // start AI functions
+  //////////////////////////////////////////////////////////////////////////////////
+  
+  //general function to be called by main, returns coordinate that the AI decided to move to
+  Coordinate getAIMove();
+
+  //function that gets the defensive mode move
+  Coordinate getDefense();
+
+  //function that gets the intelligent mode move
+  Coordinate getAttack();
+  
+  //function that gets the random mode move
+  Coordinate getRandomAIMove(vector<Coordinate>& us);
+
+  //creates a list of moves for the ai to try at the beginning of the game
+  void populatePlaybook();
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // end AI functions
+  //////////////////////////////////////////////////////////////////////////////////
+
+
+
+  bool getWinnerDetermined() const {return winnerDetermined;}
+  void setWinnerDetermined() {winnerDetermined = true;}
+  Coordinate getHumanMove(vector<Coordinate>& us);
+  //void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);    
+  int getNumMovesPlayed() const {return numMovesPlayed;}
+  void incrementNumMovesPlayed() {numMovesPlayed++;}
+  bool isEnded() const {return gameEnded;} // getter paired w/ setGameEnded
+  void setGameEnded() {gameEnded = true;}
+  bool isDraw();
+
+  bool isFree(Coordinate location); 
+  
+  //////////////////////////////////////////////////////////////////////////////////
+  // start image processing functions
+  //////////////////////////////////////////////////////////////////////////////////
+
+
+  //this function checks to see how many pieces are currently placed on the board, and 
+  //updates the game state if we detect one new piece from each human player
+  bool populateBoard(string filename, Coordinate &enemyMove);
+
+  
+  //this function populates the pixel location of each spot on the board
+  //using either a stock image or a picture taken at the beginning of the game
+  void observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]);   
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // end image processing functions
+  //////////////////////////////////////////////////////////////////////////////////
+
+
+  //////////////////////////////////////////////////////////////////////////////////
+  // start winningMove functions
+  //////////////////////////////////////////////////////////////////////////////////
 	bool winningMove(Coordinate most_recent_move);
 
 	bool fiveHorizontally(Coordinate coord);
