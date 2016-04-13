@@ -28,12 +28,12 @@ vector <compositeCircle> observePieces(string filename, int expectedPieces)
   Mat3b img = imread(filename, 1);
   Mat3b blurred;
   Mat dispImg;
-  resize(img,dispImg,dispSize);
-  //cout << "showing image" << endl; 
-  //imshow("image", dispImg);
-  //waitKey(0);
-  vector<Mat> dispVec;
-  split(dispImg, dispVec);
+	//  resize(img,dispImg,dispSize);
+	//cout << "showing image" << endl; 
+	//imshow("image", dispImg);
+	//waitKey(0);
+	//  vector<Mat> dispVec;
+	//  split(dispImg, dispVec);
 
   /*	
       cout << "showing image channel 0" << endl; 
@@ -175,14 +175,14 @@ vector <compositeCircle> observePieces(string filename, int expectedPieces)
       circle( img, Point(c[0], c[1]), c[2], Scalar(0,255,0), 3, LINE_AA); 
       //  numblack++;
     }
-  }
-		//namedWindow( "imOutput", WINDOW_AUTOSIZE ); // Create a window for display.
-  if(expectedPieces < 0 ) {
+	}
+	//namedWindow( "imOutput", WINDOW_AUTOSIZE ); // Create a window for display.
+	if(expectedPieces < 0 ) {
 
-    resize(img, img, dispSize);
-    imshow("imOutput", img);
-    waitKey(0);
-   }
-  //cout << "num circles is: " << known_circles.size() << endl; 
+		resize(img, img, dispSize);
+		imshow("imOutput", img);
+		waitKey(0);
+	}
+	cout << "detected: " << known_circles.size()<< " circles " << endl; 
   return known_circles;
 } 

@@ -36,13 +36,13 @@ Gomoku::Gomoku() {
 	//if(!populateGridEdges("../images/pierpont/connector/001.jpg",board))
 	//	assert(0);
 	// 
-	if(!populateGridEdges("../images/JJgame/000.jpg",board))
-  	assert(0);
-	
+	//	if(!populateGridEdges("../images/JJgame/000.jpg",board))
+	// 	assert(0);
+
 	// begin code to take empty board image
-	//system("raspistill -t 1000 -o empty.jpg");	
-	// if(!populateGridEdges("empty.jpg", board))
-	// assert(0);
+	system("raspistill -t 1000 -n -o empty.jpg");	
+	if(!populateGridEdges("empty.jpg", board))
+		assert(0);
 
 	initializePlaybook();
 }
@@ -96,9 +96,6 @@ Coordinate Gomoku::getAIMove(){
 	}
 	curMove = myMoves[myMoves.size()-1];
 	setAIMove(curMove);
-  //Call UI
-	Mat src = imread("move.jpg", 0); 
-	UI(src, curMove, board);
   
 	return curMove;
 }
@@ -133,6 +130,7 @@ Coordinate Gomoku::getRandomAIMove(vector<Coordinate>& us) {
 		if(board[coord.x][coord.y].owner == blank) {
 			std::cout << "random AI moves to " << coord.x << ", " << coord.y << "\n";
 			board[coord.x][coord.y].owner = AI_COLOR;
+
 			break;
 		}
 	}
@@ -144,6 +142,10 @@ void Gomoku::setAIMove(Coordinate &coord){
 	if(board[coord.x][coord.y].owner == blank) {
 		std::cout << "AI moves to " << coord.x << ", " << coord.y << "\n";
 		board[coord.x][coord.y].owner = AI_COLOR;
+		
+  	//Call UI
+	  Mat src = imread("move.jpg", 0); 
+		UI(src, coord, board);
 	}
 	incrementNumMovesPlayed();
 }
@@ -566,9 +568,12 @@ bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
 	//TODO: observe previous gamestate, and make sure the delta is only 1 
 	//spot prevBoard[GRID_LENGTH][GRID_LENGTH];
 
-	vector<compositeCircle> knownCircles = observePieces(filename,numMovesPlayed+1);
+	vector<compositeCircle> knownCircles = observePieces(filename,-1 );
+
+
+
 	Point2f coords;
-	
+	MoveType foundColor;
 	bool foundPiece = false;
 	
 	for(unsigned int i = 0; i < knownCircles.size(); ++i) { // iterate through all detected circles
@@ -598,19 +603,23 @@ bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
 			foundPiece = true;	
 			enemyMove.x = minX;
 			enemyMove.y = minY;	
-			enemyMoves.push_back(Coordinate(minX,minY)); 
-			board[minX][minY].owner = knownCircles[i].color;
 			coords.x = minX;
 			coords.y = minY;
+			foundColor = knownCircles[i].color;
 			if(knownCircles[i].color != PLAYER_COLOR){
-				cout << "detected computer move in populate board, error " << endl; 
-				assert(0);
+				cout << "computer was moved to the wrong spot, error " << endl; 
+				return false;
 			}	
 			cout << "detected piece placed at " << minY << "," << minX << endl;
 		}	
 	}
-	if(foundPiece==true)
+	if(foundPiece==true){
 		incrementNumMovesPlayed();
+		enemyMoves.push_back(Coordinate(coords.x,coords.y)); 
+		int x  = coords.x; 
+		int y = coords.y;	
+		board[x][y].owner = foundColor;
+	}
 	return foundPiece;
 }
 

@@ -1,0 +1,986 @@
+    1  sudo apt-get update
+    2  sudo raspi-config
+    3  raspistill -t 1000
+    4  raspistill -t 10000
+    5  raspistill ~ less
+    6  raspistill -t 1000
+    7  raspivid
+    8  raspivid -t 1000
+    9  raspivid -t 10003
+   10  raspistill # less
+   11  raspistill ~
+   12  raspistill ~ less
+   13  ls
+   14  mkdir gomo
+   15  ls
+   16  git clone https://github.com/Jconn/gomo-bot.gif
+   17  ls
+   18  cd gomo
+   19  vim samplepic.sh
+   20  touch samplepic.sh
+   21  vi samplepic.sh
+   22  vim samplepic.sh
+   23  vi samplepic.sh 
+   24  ls
+   25  ll
+   26  ls -l
+   27  chmod 777 samplepic.sh 
+   28  ./samplepic.sh 
+   29  ls
+   30  vi samplepic.sh 
+   31  ./samplepic.sh 
+   32  vi samplepic.sh 
+   33  ./samplepic.sh 
+   34  vi samplepic.sh 
+   35  ./samplepic.sh 
+   36  ls
+   37  vi samplepic.sh 
+   38  ./samplepic.sh 
+   39  ls
+   40  ./samplepic.sh 
+   41  echo samplepic.sh 
+   42  cat samplepic.sh 
+   43  raspistill -t 10000
+   44  raspistill -t 100000
+   45  raspistill -t 1000
+   46  ls
+   47  ./samplepic.sh 
+   48  vi samplepic.sh 
+   49  raspistill  -o testimage2.jpg -t 100000
+   50  raspistill  -o testimage2.jpg -t 100
+   51  raspistill  -o board_rpi.jpg -t 100
+   52  raspistill  -o board_rpi.jpg -t 1000000
+   53  raspistill  -o board_pieces_rpi.jpg -t 100
+   54  raspistill  -o board_pieces_rpi2.jpg -t 100
+   55  raspistill  -o board_pieces_rpi3.jpg -t 100
+   56  raspistill  -o board_pieces_rpi3.jpg -t 1000
+   57  ls
+   58  vim blob.m 
+   59  history 
+   60  sudo apt-get vim
+   61  sudo apt-get vipackage
+   62  sudo apt-search vim
+   63  ls
+   64  git commit * -am "initial images from rpi"
+   65  git commit -am "initial images from rpi"
+   66  git add *
+   67  git commit -am "initial images from rpi"
+   68  git config --global user.email "johnconn@umich.edu"
+   69  git config --global user.name Rpi
+   70  git commit -am "initial images from rpi"
+   71  git push
+   72  exit
+   73  cd gomo/
+   74  lsd
+   75  ls
+   76  git clone https://github.com/Jconn/gomo-bot.git
+   77  ssh-keygen -t rsa -b 4096 -C johnconn@umich.edu
+   78  eval $(ssh-agent -s)
+   79  ¬¬¬¬¬
+   80  cd ¬/
+   81  find / -name *ssh* 
+   82  ssh-add /home/pi/.ssh/id_rsa
+   83  git clone https://github.com/Jconn/gomo-bot.git
+   84  pbcopy < /home/pi/.ssh/id_rsa.pub 
+   85  vi /home/pi/.ssh/id_rsa.pub 
+   86  git clone https://github.com/Jconn/gomo-bot.git
+   87  git clone git@github.com:Jconn/gomo-bot.git
+   88  ls
+   89  cp samplepic.sh gomo-bot/
+   90  ls
+   91  cd gomo-bot/
+   92  ls
+   93  vi samplepic.sh 
+   94  history
+   95  sudo apt-get update
+   96  exit
+   97  sudo shutdown
+   98  hostname
+   99  vim /etc/hosts
+  100  vi /etc/hosts
+  101  vi /etc/hostname 
+  102  vi /etc/hosts
+  103  sudo vi /etc/hosts/
+  104  sudo vi /etc/hosts
+  105  sudo vi /etc/hostname 
+  106  cat /etc/hostname 
+  107  cat /etc/hosts
+  108  shutdown -h now
+  109  /ifconfig
+  110  ifconfig
+  111  sudo /etc/init.d/hostname.sh 
+  112  sudo reboot
+  113  ifconfig
+  114  sudo service ssh status
+  115  sudo ufw allow ssh
+  116  hostname -I
+  117  ifconfig
+  118  hostname -I
+  119  ssh 10.0.2.115
+  120  ssh johnconn@10.0.2.115
+  121  ssh johnconn@10.0.2.15
+  122  shutdown
+  123  sudo shutdown
+  124  sudo shutdown -h
+  125  sudo shutdown -h now
+  126  ls
+  127  cd gomo
+  128  ls
+  129  ./samplepic.sh 
+  130  cat samplepic.sh 
+  131  raspistill  -o testimage2.jpg -t 100009 
+  132  raspistill  -o testimage2.jpg -t 1000
+  133  ll
+  134  ls
+  135  raspistill  -o testimage2.jpg -t 1000
+  136  raspistill  -o testimage2.jpg -t 100000
+  137  raspistill  -o dense_board_rpi.jpg -t 100000
+  138  raspistill  -o dense_rpi.jpg -t 100000
+  139  raspistill  -o dense_rpi.jpg -t 10
+  140  raspistill  -o dense_rpi.jpg -t 100
+  141  raspistill  -o dense_rpi.jpg -t 1000
+  142  raspistill  -o dense_rpi_shadow.jpg -t 1000
+  143  raspistill  -o dense_rpi_bright.jpg -t 1000
+  144  raspistill  -o dense_rpi_bright.jpg -t 100000
+  145  raspistill  -o dense_rpi_bright.jpg -t 100
+  146  raspistill  -o dense_rpi_bright.jpg -t 1000
+  147  raspistill  -o dense_rpi_bright2.jpg -t 10000
+  148  raspistill  -o sparse_rpi.jpg -t 10000
+  149  raspistill  -o sparse_rpi_bright.jpg -t 10000
+  150  raspistill  -o sparse_rpi_bright2.jpg -t 10000
+  151  raspistill  -o sparse_rpi_shadow.jpg -t 10000
+  152  raspistill  -o sparse_rpi_shadow2 .jpg -t 10000
+  153  raspistill  -o sparse_rpi_shadow2.jpg -t 10000
+  154  raspistill  -o sparse_rpi_shadow3.jpg -t 10000
+  155  raspistill  -o sparse_rpi_shadow4.jpg -t 10000
+  156  raspistill  -o sparse_rpi_shadow5.jpg -t 10000
+  157  ls
+  158  git pull
+  159  cd gomo-bot/
+  160  ls
+  161  git pull
+  162  ls
+  163  ll
+  164  cd ..
+  165  ls
+  166  mv *.jpg gomo-bot/images/
+  167  ls
+  168  cd gomo-bot/
+  169  cd images
+  170  ls
+  171  git add *
+  172  git commit -am "more test images "
+  173  git push
+  174  git pull
+  175  ls
+  176  git push
+  177  raspistill  -o default.jpg -t 10000
+  178  raspistill  -o default.jpg -t 1000000
+  179  raspistill  -o board_pic.jpg -t 100
+  180  raspistill  -o board_pic.jpg -t 1000
+  181  raspistill  -o board_pic.jpg -t 10000
+  182  raspistill  -o board_pic.jpg -t 100
+  183  raspistill  -o board_pic_peces.jpg -t 100
+  184  raspistill  -o board_pic_peces2.jpg -t 100
+  185  raspistill  -o board_pic_peces2.jpg -t 100000
+  186  raspistill  -o board_pic_peces2.jpg -t 100
+  187  git add *
+  188  ls
+  189  cp board_pic* gomo/gomo-bot/images/
+  190  cd gomo/gomo-bot/images/
+  191  ll
+  192  ls
+  193  git add board_pic*
+  194  git commit -am "m                                        
+  195  git commit -am "added more pics "
+  196  git push
+  197  git pull
+  198  git push
+  199  shutdown -h
+  200  su
+  201  sudo shutdown -h
+  202  sudo shutdown -h now
+  203  sudo apt-get update
+  204  sudo apt-get upgrade
+  205  sudo rpi-update
+  206  sudo rpi-update -k
+  207  sudo rpi-update --insecure
+  208  sudo apt-get install build-essential git cmake pkg-config
+  209  sudo apt-get install libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev 
+  210  sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev ibv4l-dev
+  211  sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+  212  sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-devsudo apt-get install libxvidcore-dev libx264-dev
+  213  sudo apt-get install libxvidcore-dev libx264-dev
+  214  sudo apt-get install libgtk2.0-dev
+  215  sudo apt-get install libatlas-base-dev gofrtran
+  216  sudo apt-get install libatlas-base-dev gofortran
+  217  sudo apt-get install libatlas-base-dev gfortran
+  218  ls
+  219  cd ¬
+  220  ls
+  221  cd ¬/
+  222  ls
+  223  cd 
+  224  cd /home
+  225  pwd
+  226  cd home
+  227  cd /
+  228  ls
+  229  cd home/
+  230  ls
+  231  cd pi
+  232  ls
+  233  pwd
+  234  mkdir opencv
+  235  cd opencv
+  236  ls
+  237  pwd
+  238  wget -O opencv.zip https://github.com/Itseez/opencv/archive/3.0.0.zip
+  239  history 
+  240  git clone git@github.com:Itseez/opencv.git
+  241  git clone git@github.com:Itseez/opencv_contrib.git
+  242  pwd
+  243  ls
+  244  rm opencv.zip 
+  245  LS
+  246  Ls
+  247  ls
+  248  cd opencv
+  249  ls
+  250  mkdir build
+  251  cd build
+  252  cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local
+  253  cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..
+  254  nproc
+  255  make -j4
+  256  ll
+  257  ls
+  258  cd ..
+  259  ll
+  260  ls
+  261  gomo
+  262  cd ¬/
+  263  ls
+  264  cd ..
+  265  ls
+  266  cd ..
+  267  ls
+  268  cd gomo
+  269  ls
+  270  cd gomo-bot/
+  271  ls
+  272  cd code/
+  273  cd ..
+  274  git pull
+  275  ls
+  276  cd code/linuxBuild/
+  277  ls
+  278  ls /usr/local/lib/
+  279  make
+  280  rm observe
+  281  make
+  282  ls /usr/local/include/
+  283  cd /home/pi/
+  284  ls
+  285  cd opencv/
+  286  ls
+  287  cd opencv
+  288  ls
+  289  cd build
+  290  ls
+  291  sudo make install
+  292  ls
+  293  cd ..
+  294  ls
+  295  cd samples
+  296  cd /home/pi/
+  297  ls
+  298  cd gomo/
+  299  ls
+  300  cd gomo-bot/
+  301  ls
+  302  cd code
+  303  ls
+  304  cd linuxBuild/
+  305  make
+  306  vim Makefile 
+  307  vi MAke
+  308  vi Makefile 
+  309  make
+  310  vi Makefile 
+  311  make
+  312  sudo apt-get install vim
+  313  ll
+  314  ls
+  315  vim observepieces.cpp 
+  316  make
+  317  ll
+  318  ls
+  319  vim Makefile 
+  320  which g++
+  321  g++ -v
+  322  gcc -v
+  323  make
+  324  vim MAke
+  325  vim Makefile 
+  326  make
+  327  ls
+  328  vim Makefile 
+  329  make
+  330  printenv
+  331  printenv > tmp
+  332  vim tmp
+  333  ls /usr/local/lib/
+  334  ls
+  335  vim /etc/bashrc
+  336  vim /etc/bash.bashrc 
+  337  sudo vim /etc/bash.bashrc 
+  338  ll
+  339  ls
+  340  sudo vim /etc/bash.bashrc 
+  341  ll
+  342  sh
+  343  exit
+  344  ll
+  345  cd gomo
+  346  cd cod
+  347  cd gomo-bot/
+  348  cd code/linuxBuild/
+  349  ll
+  350  make
+  351  vim observepieces.cpp 
+  352  vim Makefile 
+  353  make
+  354  vim Makefile 
+  355  make
+  356  vim Makefile 
+  357  make
+  358  vim MAke
+  359  vim Makefile 
+  360  make
+  361  vim Makefile 
+  362  make clean
+  363  make
+  364  vim Makefile 
+  365  make
+  366  vim Makefile 
+  367  make
+  368  ls /usr/local/lib/
+  369  ls /usr/local/include/
+  370  make
+  371  printenv
+  372  printenv > output
+  373  vim output
+  374  /usr/local/lib/
+  375  ls /usr/local/lib/
+  376  history > output
+  377  vim output
+  378  ll
+  379  vim tmp
+  380  make
+  381  ls /tmp
+  382  cd tmp
+  383  cd /tmp
+  384  ls
+  385  ll
+  386  cd ssh-aIPzsdGRStil/
+  387  ll
+  388  cd ..
+  389  ll
+  390  ls /usr/local/lib/pkgconfig/
+  391  vim /usr/local/lib/pkgconfig/opencv.pc 
+  392  ll
+  393  cd /home/pi/gomo/gomo-bot/code/linuxBuild/
+  394  vim Makefile 
+  395  vim /usr/local/lib/pkgconfig/opencv.pc 
+  396  make
+  397  vim Makefile 
+  398  make
+  399  make clean
+  400  make
+  401  ll
+  402  rm output tmp
+  403  ./observe ../../images/sparse_rpi_shadow2.jpg 
+  404  tvservice -m
+  405  tvservice -m CEA
+  406  tvservice -m DMT
+  407  tvservice -s
+  408  find / -name config
+  409  find / -name config#.txt
+  410  find / -name config
+  411  vim /sys/kernel/config/
+  412  cd /boot/overlays/
+  413  cd ..
+  414  ll
+  415  vim config.txt 
+  416  sudo vim config.txt 
+  417  sudo restart
+  418  restart
+  419  reboot
+  420  ll
+  421  cd gomo
+  422  ll
+  423  cd gomo-bot/
+  424  ll
+  425  cd code
+  426  ll
+  427  cd linuxBuild/
+  428  ll
+  429  ./observe ../../images/sparse_rpi_shadow2.jpg 
+  430  vim /boot/config.txt 
+  431  ll
+  432  ./observe ../../images/dense_rpi_bright2.jpg 
+  433  vim observepieces.cpp 
+  434  ./observe ../../images/dense_rpi_bright2.jpg 
+  435  ll
+  436  sudo shutdown-h now
+  437  sudo shutdown -h now
+  438  l
+  439  ll
+  440  history 
+  441  ll
+  442  cd gomo
+  443  ll
+  444  cat samplepic.sh 
+  445  ll
+  446  raspistill -o default.jpg -t 10000
+  447  reboot
+  448  ifconfig
+  449  ifnet
+  450  nmap
+  451  rpi
+  452  ip addr show eth0
+  453  sudo raspi-config
+  454  hostname -I
+  455  cd
+  456  sudo raspi-config
+  457  hostname -I
+  458  ssh
+  459  pwd
+  460  sudo reboot
+  461  sudo iwlist wlan0 scan
+  462  hostname -I
+  463  passwd
+  464  ls
+  465  :q
+  466  sudo apt-get install tightvncserver
+  467  tightvncserver
+  468  run apt-get update
+  469  apt-get update
+  470  pwd
+  471  sudo apt-get install tightvncserver
+  472  tightvncserver
+  473  vncserver :1 -geometry 1920x1080 -depth 24
+  474  ls
+  475  pwd
+  476  ls
+  477  pwd
+  478  touch vnc.sh
+  479  vim vnc.sh
+  480  chmod +x vnc.sh
+  481  ./vnc.sh
+  482  touch vnc_instructions.txt
+  483  vim vnc_instructions.txt 
+  484  cd vnc
+  485  ls
+  486  sudo su
+  487  ls
+  488  vim vnc_instructions.txt 
+  489  ./vnc.sh
+  490  hostname _i
+  491  hostname -I
+  492  ./vnc.sh
+  493  sudo su
+  494  ls
+  495  mkdir pierpont_pictures
+  496  raspistill -o beyondmujo.jpg
+  497  ls
+  498  cd pierpont_pictures
+  499  raspistill -o beyondmujo.jpg
+  500  raspistill -o beyondmujo.jpg -t 10000
+  501  raspistill -o beyondmujo1.jpg -t 10000
+  502  shutdown
+  503  shutdown -h now
+  504  sudo restart
+  505  restart
+  506  sudo reboot
+  507  ifconfig
+  508  sudo vim /etc/network/interfaces
+  509  sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
+  510  wpa_gui
+  511  cp /usr/share/applications/wpa_gui.desktop ¬/Desktop
+  512  ls
+  513  cd usr
+  514  ls
+  515  cd
+  516  ls
+  517  cd ..
+  518  ls
+  519  cd ..
+  520  ls
+  521  cd usr
+  522  ls
+  523  cd share/applications
+  524  ls
+  525  cd
+  526  ls
+  527  sudo apt-get update
+  528  sudo vim /etc/wpa_supplicant/wpa_supplicant.conf
+  529  sudo reboot
+  530  history 
+  531  raspistill -t 100000
+  532  ls
+  533  raspistill -t 100000 -o default.png
+  534  ls
+  535  raspistill -t 100000 -o /media/pi
+  536  raspistill -t 10 -o /media/pi
+  537  raspistill -t 100 -o /media/pi
+  538  raspistill -t 100 -o /media/pi all_white
+  539  raspistill -t 100 -o /media/pi/all_white_dude.jpg
+  540  history
+  541  raspistill -t 100 -o default.jpg
+  542  ls
+  543  raspistill -t 100 -o /media/pi/all_white_dude.jpg
+  544  cd /media/pi
+  545  ls
+  546  raspistill -t 100 -o default.jpg
+  547  ls
+  548  raspistill -t 100 -o default.jpg
+  549  su
+  550  cd /
+  551  su 
+  552  su
+  553  ls
+  554  cd home/pi/
+  555  ls
+  556  raspistill -t 100 -o all_white_dude.jpg
+  557  history
+  558  raspistill -t 1000 -o all_white_dude2.jpg
+  559  raspistill -t 1 -o all_white_dude3.jpg
+  560  raspistill -t 2000 -o all_white_dude4.jpg
+  561  raspistill -t 2000 -o all_white_dude4.jpg -n
+  562  raspistill -t 2 -o all_white_dude4.jpg -n
+  563  raspistill -t 100000 -o default.jpg 
+  564  raspistill -t 100000 -o fully_mixed_dude.jpg 
+  565  raspistill -t 1000 -o fully_mixed_dude.jpg 
+  566  raspistill -t 10 -o fully_mixed_dude1.jpg 
+  567  raspistill -t 1000 -o fully_mixed_dude2.jpg 
+  568  raspistill -t 100000 -o default.jpg 
+  569  raspistill -t 1000 -o fully_mixed_edge _dude.jpg 
+  570  raspistill -t 1000 -o fully_mixed_edge_dude.jpg 
+  571  raspistill -t 10 -o fully_mixed_edge_dude1.jpg 
+  572  raspistill -t 100 -o fully_mixed_edge_dude2.jpg 
+  573  raspistill -t 10000 -o fully_mixed_edge_dude2.jpg 
+  574  raspistill -t 100 -o holes_edge_dude.jpg 
+  575  raspistill -t 1100 -o holes_edge_dude1.jpg 
+  576  raspistill -t 100 -o holes_edge_dude.jpg 
+  577  raspistill -t 1100 -o holes_edge_dude1.jpg 
+  578  raspistill -t 100 -o interspersed_dude.jpg 
+  579  raspistill -t 1000 -o interspersed_dude1.jpg 
+  580  raspistill -t 10000 -o fully_mixed_edge_dude2.jpg 
+  581  ls
+  582  raspistill -t 1000 -o interspersed_dude3.jpg 
+  583  raspistill -t 10 -o interspersed_dude4.jpg 
+  584  raspistill -t 10 -o interspersed_hand_dude.jpg 
+  585  raspistill -t 1000 -o interspersed_hand_dude.jpg 
+  586  raspistill -t 1000 -o interspersed_hand_dude1.jpg 
+  587  raspistill -t 1000 -o interspersed_hand_dude2.jpg 
+  588  raspistill -t 10000 -o interspersed_hand_dude2.jpg 
+  589  ls
+  590  raspistill -t 1000 -o edge_dude.jpg 
+  591  raspistill -t 10000 -o interspersed_hand_dude2.jpg 
+  592  ls
+  593  raspistill -t 1000 -o edge_dude.jpg 
+  594  raspistill -t 100000 -o edge_dude.jpg 
+  595  raspistill -t 1000 -o edge_dude.jpg 
+  596  raspistill -t 10 -o edge_dude1.jpg 
+  597  raspistill -t 100 -o edge_dude2.jpg 
+  598  raspistill -t 100 -o edge_dude3.jpg 
+  599  raspistill -t 10000 -o edge_dude3.jpg 
+  600  ls
+  601  mkdir jj_game
+  602  cd jj_game/
+  603  ll
+  604  raspistill -t 1000 -o 000.jpg 
+  605  raspistill -t 1000 -o 001.jpg 
+  606  raspistill -t 1000 -o 002.jpg 
+  607  raspistill -t 1000 -o 003.jpg 
+  608  raspistill -t 1000 -o 001.jpg 
+  609  raspistill -t 1000 -o 002.jpg 
+  610  raspistill -t 1000 -o 003.jpg 
+  611  raspistill -t 1000 -o 004.jpg 
+  612  raspistill -t 1000 -o 005.jpg 
+  613  raspistill -t 1000 -o 006.jpg 
+  614  raspistill -t 1000 -o 007.jpg 
+  615  raspistill -t 1000 -o 008.jpg 
+  616  raspistill -t 1000 -o 009.jpg 
+  617  raspistill -t 1000 -o 010.jpg 
+  618  raspistill -t 1000 -o 011.jpg 
+  619  raspistill -t 1000 -o 012.jpg 
+  620  raspistill -t 1000 -o 013.jpg 
+  621  raspistill -t 1000 -o 014.jpg 
+  622  raspistill -t 1000 -o 015.jpg 
+  623  raspistill -t 1000 -o 016.jpg 
+  624  raspistill -t 1000 -o 017.jpg 
+  625  raspistill -t 1000 -o 018.jpg 
+  626  raspistill -t 1000 -o 019.jpg 
+  627  raspistill -t 1000 -o 020.jpg 
+  628  raspistill -t 1000 -o 021.jpg 
+  629  raspistill -t 1000 -o 022.jpg 
+  630  raspistill -t 1000 -o 023.jpg 
+  631  raspistill -t 1000 -o 024.jpg 
+  632  raspistill -t 1000 -o 025.jpg 
+  633  raspistill -t 1000 -o 026.jpg 
+  634  raspistill -t 1000 -o 027.jpg 
+  635  raspistill -t 1000 -o 028.jpg 
+  636  raspistill -t 1000 -o 029.jpg 
+  637  raspistill -t 1000 -o 030.jpg 
+  638  raspistill -t 1000 -o 031.jpg 
+  639  raspistill -t 1000 -o 032.jpg 
+  640  raspistill -t 1000 -o 033.jpg 
+  641  ls
+  642  su
+  643  gomo
+  644  su
+  645  ls /
+  646  sudo shutdown
+  647  sudo shutdown -h now
+  648  ifconfig
+  649  ll
+  650  ifconfig
+  651  cd /
+  652  mkdir test
+  653  ls
+  654  su
+  655  su gomobot
+  656  su
+  657  ls
+  658  su
+  659  si
+  660  su
+  661  reboot
+  662  su
+  663  ll
+  664  alias
+  665  vim
+  666  history
+  667  sudo su
+  668  su
+  669  sudo su
+  670  history
+  671  history > history.txt
+  672  vim history.txt 
+  673  ls
+  674  vim vnc_instructions.txt 
+  675  iwlist
+  676  sudo su
+  677  ll
+  678  sudo reboot
+  679  ls
+  680  ifoncig
+  681  ifconfig
+  682  ls /media/
+  683  cd /media/pi
+  684  ll
+  685  cd SETTINGS/
+  686  ll
+  687  cd ..
+  688  ll
+  689  cd E83F-782C/
+  690  ll
+  691  sudo su
+  692  ll
+  693  su
+  694  sudo su
+  695  hostname -l
+  696  hostname -i
+  697  hostname -I
+  698  vim /etc/network/interfaces
+  699  sudo vim /etc/network/interfaces
+  700  ifdown
+  701  sudo ifdown
+  702  su
+  703  jijij
+  704  sudo su
+  705  traceroute 93.93.128.176
+  706  iwconfig
+  707  ifconfig
+  708  vim /etc/network/interfaces
+  709  ifconfig
+  710  vim /etc/network/interfaces
+  711  sudo vim /etc/network/interfaces
+  712  ifdown wlan0
+  713  su
+  714  sudo su
+  715  vim /etc/resolve.conf
+  716  vim /etc/resolv.conf 
+  717  sudo su
+  718  ifconfig
+  719  sudo /etc/network/interfaces.d/
+  720  sudo vim /etc/network/interface
+  721  sudo su
+  722  ll
+  723  ifconfig
+  724  iwconfig
+  725  ieconfig
+  726  ifconfig
+  727  sudo su 
+  728  ifconfig
+  729  sudo su
+  730  ifconfig
+  731  sudo su 
+  732  ifconfig
+  733  sudo su 
+  734  history > history.txt
+  735  vim history.txt 
+  736  vim vnc.sh
+  737  ll
+  738  jobs -p
+  739  services
+  740  service --status-all
+  741  service stop vncboot
+  742  service vncboot stop
+  743  sudo service vncboot stop
+  744  service --status-all
+  745  ll
+  746  vim history.txt 
+  747  vim vnc.sh h
+  748  ./vnc.s
+  749  ./vnc.sh
+  750  service --status-all
+  751  ./vnc.sh
+  752  reboot
+  753  ifconfig
+  754  sudo su
+  755  ifconfig
+  756  iwconfig
+  757  service --status-all
+  758  vim /etc/init.d/vncboot 
+  759  ip link show interaface
+  760  ip link show interface
+  761  cat /proc/cpuinfo
+  762  ifconfig eth0
+  763  vim config.txt
+  764  sudo so
+  765  sudo su
+  766  ifconfig
+  767  ping www.google.com -c 15
+  768  route -n
+  769  service --status-all
+  770  ping www.google.com -c 15
+  771  sudo su
+  772  ping www.google.com
+  773  sudo shitdown -h now
+  774  sudo shutdown -h now
+  775  sudo su
+  776  ping www.google.com
+  777  sudo ping www.google.com
+  778  vim /etc/resolv.conf
+  779  sudo su
+  780  sudo ping www.google.com
+  781  sudo su
+  782  sudo ping www.github.com
+  783  ifconfig
+  784  iwconfig
+  785  ifconfig
+  786  sudo su
+  787  ll
+  788  cd gomo/
+  789  ll
+  790  cd gomo-bot/
+  791  ll
+  792  cd images
+  793  ll
+  794  cd ..
+  795  cd gomo
+  796  cd images/
+  797  ll
+  798  mkdir JJgame
+  799  cd /
+  800  cd home/
+  801  cd pi/
+  802  ll
+  803  cd jj_game/
+  804  ll
+  805  cp * ../gomo/gomo-bot/images/JJgame/
+  806  cd ..
+  807  ll
+  808  cp interspersed_* edge_dude* fully_mixed_* all_white_dude* gomo/gomo-bot/images/
+  809  cd gomo/
+  810  ll
+  811  cd gomo-bot/
+  812  ll
+  813  git status
+  814  git add images/*
+  815  git commit -m "adding images from pi"
+  816  git pull
+  817  git stash
+  818  git pull
+  819  git status
+  820  git add images/empty_dark
+  821  cd images/empty_
+  822  cd images
+  823  ll
+  824  cd empty_dark/
+  825  ll
+  826  git status
+  827  git add ../empty_dark~HEAD 
+  828  git pull
+  829  cd ..
+  830  ls
+  831  ls -a
+  832  vim empty_dark~HEAD 
+  833  cat .git/HEAD
+  834  git status
+  835  ll
+  836  git rm empty_dark0*
+  837  git rm empty_dark~HEAD 
+  838  ls
+  839  vim dark001
+  840  cd occupied_dark/
+  841  ll
+  842  cd ..
+  843  ls
+  844  git rm overlap00* dark00*
+  845  ls
+  846  git commit -m "fixing conflicts"
+  847  git pull
+  848  sudo ping www.google.com
+  849  sudo ping www.github.com
+  850  git pull
+  851  git push
+  852  cd ..
+  853  ll
+  854  cd ..
+  855  cd gomo-bot/
+  856  ll
+  857  git pull
+  858  cd code/
+  859  ll
+  860  make ai
+  861  ./ai
+  862  exit
+  863  sudo ping www.google.com
+  864  ll
+  865  cd ..
+  866  ll
+  867  cd code
+  868  ll
+  869  make ai
+  870  vim Gomoku.h 
+  871  ll
+  872  vim Makefile 
+  873  git pull
+  874  sudo ping www.github.com
+  875  sudo ping www.google.com -c 10
+  876  sudo ping www.github.com
+  877  ll
+  878  git push
+  879  exit
+  880  sudo shutdown -h now
+  881  ls
+  882  cd gomo/gomo-bot/
+  883  ll
+  884  cd cdoe
+  885  cd code
+  886  ll
+  887  cd linuxBuild/
+  888  ll
+  889  make observe
+  890  vim MAke
+  891  vim Makefile 
+  892  ./observe ../../images/edge_dude1.jpg jpg
+  893  ll
+  894  rm observe
+  895  make observe
+  896  vim Makefile 
+  897  find / -name opencvlib
+  898  sudo find / -name opencvlib
+  899  sudo find / -name opencvlib*
+  900  sudo find / -name opencv*
+  901  ls usr/local/bin
+  902  sudo su
+  903  ls /usr/local/lib/
+  904  vim Makefile 
+  905  make observe
+  906  ./oberve ../../images/edge_dude1.jpg 
+  907  ./observe ../../images/edge_dude1.jpg 
+  908  sudo reboot
+  909  gomo
+  910  cd gomo/gomo-bot/code/
+  911  ll
+  912  cd linuxBuild/
+  913  ll
+  914  ./observe ../../images/edge_dude1.jpg 
+  915  ./observe ../../images/fully_mixed_dude1.jpg 
+  916  vim observepieces.cpp 
+  917  make observe 
+  918  vim observepieces.cpp 
+  919  sudo ping www.google.com
+  920  sudo su
+  921  sudo ping www.google.com
+  922  sudo su
+  923  ll
+  924  sudo su
+  925  ping google.com
+  926  lsusb
+  927  ping google.com
+  928  /etc/NetworkManager/system-connections
+  929  ls -l
+  930  sudo cat NetworkConfig.conf
+  931  wpi_gui
+  932  wpa_gui
+  933  sudo cat NetworkConfig.conf
+  934  /etc/NetworkManager/system-connections
+  935  /usr/sbin/wpa_gui
+  936  /usr/sbin/
+  937  ls
+  938  cd /usr/sbin/
+  939  ls
+  940  apt-get wpagui
+  941  apt-get install wpagui
+  942  sudo apt-get install wpagui
+  943  ls
+  944  wpa_gui
+  945  wicd-curses
+  946  P
+  947  ls
+  948  cd gomo/
+  949  ls
+  950  usr/sbing
+  951  usr/sbin
+  952  /usr/sbin/wpa_gui 
+  953  ll
+  954  cd gomo/
+  955  cd gomo-bot/
+  956  ll
+  957  git pull
+  958  sudo ping www.google.com
+  959  git pull
+  960  git stash
+  961  git pull
+  962  ll
+  963  cd code
+  964  ll
+  965  make ai
+  966  rm ai
+  967  make ai
+  968  vim Makefile
+  969  ll
+  970  ls 
+  971  git pull
+  972  ll
+  973  make ai
+  974  git pull
+  975  make ai
+  976  ./ai ../images/JJgame/005.jpg 
+  977  vim main.cpp 
+  978  make ai
+  979  ./ai ../images/JJgame/005.jpg 
+  980  vim ~/.vimrc
+  981  ll
+  982  vim Gomoku.cpp 
+  983  vim ~/.vimrc
+  984  vim Gomoku.cpp 
+  985  make ai
+  986  history > history.txt

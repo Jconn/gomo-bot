@@ -2,7 +2,7 @@
 #include <vector>   // vector
 #include "Gomoku.h"
 #include "Coordinate.h"
-#include "perspectivetransform.h"
+//#include "perspectivetransform.h"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
@@ -17,12 +17,14 @@ int main(int argc, char** argv)
 {
 
   cv::CommandLineParser parser(argc, argv,
-      "{help h ||}{@image|../data/board.jpg|}"
+      "{help h ||}{@image||}"
       );
   string filename = parser.get<string>("@image");
   if (!filename.empty())
-  {
-    observePieces(filename,-1);  
+	{
+		cout << "in test mode " << endl;  
+		cout << "filename is  " << filename << endl;
+		observePieces(filename,-1);  
   }
  
 	// initialize the vector with empty coordinates
@@ -35,7 +37,7 @@ int main(int argc, char** argv)
 	}
 
   Coordinate mostRecentMove(0,0); // initialize mostRecentMove
-
+	cout << " creating game " << endl;
   Gomoku game;
 
   cout << "entering game loop " << endl;
