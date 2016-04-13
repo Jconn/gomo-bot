@@ -13,7 +13,7 @@ static const Size dispSize(640, 480);
 static const Size inputSize(1024, 860);
 static const Size GS(13,13);
 
-float ED(Vec3b vec1, Vec3b vec2){
+float ED(Vec3b vec1, Vec3b vec2){ // euclidean distance
   return sqrt(
             (vec1[0]-vec2[0]) *(vec1[0]-vec2[0]) +
             (vec1[1]-vec2[1]) *(vec1[1]-vec2[1]) + 
@@ -21,6 +21,7 @@ float ED(Vec3b vec1, Vec3b vec2){
             ); 
 
 }
+
 vector <compositeCircle> observePieces(string filename, int expectedPieces)
 {
 	//cout << "expecting to see " << expectedPieces << " pieces " << endl;
@@ -33,6 +34,7 @@ vector <compositeCircle> observePieces(string filename, int expectedPieces)
   //waitKey(0);
   vector<Mat> dispVec;
   split(dispImg, dispVec);
+
   /*	
       cout << "showing image channel 0" << endl; 
       imshow("image", dispVec[0]);

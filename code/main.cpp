@@ -71,7 +71,7 @@ int main(int argc, char** argv)
       spotted = game.populateBoard("move.jpg", enemyMove);
       if(!spotted)
         cout << "did not detect picture taken " << endl;	
-    }	
+    }
 
     game.printGameState();
 
