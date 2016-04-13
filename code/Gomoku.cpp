@@ -81,6 +81,9 @@ Coordinate Gomoku::getHumanMove(vector<Coordinate>& us) {
 Coordinate Gomoku::getAIMove(){
 	cout << " grabbing ai move " << endl;	
 	Coordinate curMove;
+
+  //check what mode the AI has been set to in order to determine
+  //our AI logic for finding a move
 	if(myMode ==randomAI){
 		assert(1); 
 		//myMoves.push_back(getRandomAIMove(NULL));
@@ -153,10 +156,13 @@ void Gomoku::setAIMove(Coordinate &coord){
 }
 Coordinate Gomoku::getDefense(){
 	//we have the board, loop through our spaces, and find threats that we have,
-	//but at the start of our play, just follow the playbook
-	cout << "enemyMoves size is " << enemyMoves.size() << endl;
-	if(myMoves.size() < 2){
-		cout << "going into opening playbook" << endl; 
+  //but at the start of our play, just follow the playbook
+  //	cout << "enemyMoves size is " << enemyMoves.size() << endl;
+
+  //check to see if we've made less than 2 moves, and if so, 
+  //make a move based on the playbook
+  if(myMoves.size() < 2){
+    cout << "going into opening playbook" << endl; 
 		for(unsigned int i = 0; i < openingPlaybook.size(); ++i){
 			if(isFree(openingPlaybook[i])){
 				cout << "moving to " << openingPlaybook[i].x <<"," << openingPlaybook[i].y << endl; 
@@ -166,6 +172,11 @@ Coordinate Gomoku::getDefense(){
 	}
 	vector <Threat> threats;
 
+
+  //loop through the enemyMoves vector to determine if any of the 
+  //enemy's currently placed pieces can form a threat
+  //
+  //TODO: extend this to multi-player
 	cout << "finding initial threats.. " << endl;
 	for(unsigned int i = 0; i < enemyMoves.size(); ++i){ 
 		findInitThreats(enemyMoves[i],threats,board,PLAYER_COLOR);
@@ -176,8 +187,14 @@ Coordinate Gomoku::getDefense(){
 		}
 	}
 	Coordinate bestDef;
-	//TODO: replace findBestMove with findBestDefense
-	if( threats.size() > 0){ 
+
+  //after we've found the list of threats that the enemy has,
+  //we use a heuristic to determine the most damaging threat
+  //by calling the function findBestDefense()
+  //
+  //If we can't find a good defensive move to be made, 
+  //then we call getAttack() to get the best attack move 
+  if( threats.size() > 0){ 
 		if(findBestDefense(threats,bestDef))
 			return bestDef;
 		else
@@ -199,11 +216,16 @@ Coordinate Gomoku::getAttack(){
 			}
 		}
 	}
+
+  //find initial threats that the computer can make
 	vector <Threat> threats;  
 	cout << "finding initial threats.. " << endl;
 	for(unsigned int i = 0; i < myMoves.size(); ++i){ 
 		findInitThreats(myMoves[i],threats,board,AI_COLOR);
 	}
+
+  //if any threat sequence has been found to win for the computer,
+  //then return that immediately
 	for(int i = 0; i < static_cast<int>(threats.size()); ++i){
 		if(threats[i].winningThreat){
 			return threats[i].gainSquare;
@@ -212,20 +234,32 @@ Coordinate Gomoku::getAttack(){
 
 
 	//now have the initial threats;
-	vector <Threat*> threatPtrs;
+  
+  //populates the vector that points to all current threats,
+  //needed for finding new threats
+  vector <Threat*> threatPtrs;
 	for(unsigned int i = 0; i < threats.size(); ++i){
 		threatPtrs.push_back(&(threats[i]));
 	}
+
+
 	cout <<"detected " << threats.size() << " initial threats " << endl;
-	cout << "recursively finding child threats.. " << endl;
-	for(unsigned int i = 0; i < threats.size(); ++i){
+  
+  
+  //didn't find a winning move, populate 10 layers of 
+  //the threat tree
+  for(unsigned int i = 0; i < threats.size(); ++i){
 		threats[i].printThreat(); 
 		threats[i].findChildThreats(10); 
 	}
 	cout << " finished child threats " << endl;
 	int bestDepth = -1;
 	int bestIndex = -1;
-	for(int i = 0; i < static_cast<int>(threats.size()); ++i){
+	
+  //check if populating threat-tree found us a winning 
+  //sequence, and return the winning sequence immediately
+  //if found
+  for(int i = 0; i < static_cast<int>(threats.size()); ++i){
 		if(threats[i].winningThreat && threats[i].winningDepth > bestDepth){
 			bestIndex = i;
 			bestDepth = threats[i].winningDepth;
@@ -237,8 +271,12 @@ Coordinate Gomoku::getAttack(){
 
 	if( threats.size() > 0) 
 		return findBestMove(threats);
-	//we did not find a winning sequence, we did not even find a threat
-	//time to get diry
+	
+  
+  //we did not find a winning sequence, we did not even find a threat
+  //so we just add every free space in the board, and 
+  //then extrapolate child threats from there
+  //time to get dirty
 	//TODO: stop being dirty
 	for(int i =0; i <GRID_LENGTH; ++i){
 		for(int j = 0; j < GRID_LENGTH; ++j){
@@ -249,6 +287,8 @@ Coordinate Gomoku::getAttack(){
 
 		}
 	}
+
+  //run the search tree five layers deep
 	cout << "attempting to find best move among s--ers" << endl;
 	cout << "threat size is " <<threats.size() << endl;
 	for(unsigned int i = 0; i < threats.size(); ++i){
@@ -256,9 +296,14 @@ Coordinate Gomoku::getAttack(){
 	}
 
 
+  //if we find a threat, then call findBestMove(),
+  //which is a heuristic to determine the best threat
+  //we can make
 	if( threats.size() > 0) 
 		return findBestMove(threats);
 
+
+  //TODO: determine if this is necessary
 	if(myMoves.size() < 3){
 		cout << "going into opening playbook" << endl; 
 		for(unsigned int i = 0; i < openingPlaybook.size(); ++i){
@@ -281,7 +326,7 @@ vector <Threat> getThreats(){
 	//and then after each move is called a "threat"
 	//determine their children, these are our actual initial threats
 	//parse all the children together, and return a vector of these coordinates
-	//TODO: USE THIS SHIT 
+	//TODO: erase this fn probably 
 	vector <Threat> totalThreats; 
 	// for(int i = 0; i < myMoves.size(); ++i){
 	//  Threat curMove(myColor,); 
@@ -527,6 +572,12 @@ void Gomoku::setMove(int x, int y, MoveType type) {
 }
 
 void Gomoku::printGameState() {
+
+  //this function just prints out the game state 
+  //with ascii characters
+  //all of the conditionals that are used (if i < 10)
+  //just accounts for the fact that some numbers will take 
+  //two chars to print and others take one char to print
   cout << "   ";
   for (int i =0; i < GRID_LENGTH; ++i){
     cout <<i << " ";
@@ -548,10 +599,10 @@ void Gomoku::printGameState() {
         std::cout << "W  ";
       } else {
         std::cout << "-  ";
-      }
-    }
-    std::cout << "\n";
-  }
+			}
+		}
+		std::cout << "\n";
+	}
 }
 
 //void Gomoku::observeBoard(int (*gameState)[GRID_LENGTH][GRID_LENGTH]){
@@ -559,17 +610,34 @@ void Gomoku::printGameState() {
 //}
 
 bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
-	//TODO: observe previous gamestate, and make sure the delta is only 1 
-	//spot prevBoard[GRID_LENGTH][GRID_LENGTH];
 
+	//this function takes the path to a file name and returns two things:
+	//-boolean that indicates whether or not the number of pieces found
+	//was the number of pieces expected
+	//-updates enemyMove to indicate where the other player moved,
+	//this is used in main so we can check to see if a winning move was made
+	//TODO: update the enemyMove update to be able to accomodate multi-player
+	//	vector<compositeCircle> knownCircles = observePieces(filename,numMovesPlayed+1 );
+
+	//knownCircles stores all of the observed pieces, and the players
+	//that each piece belongs to
+
+	//second arg indicates how many pieces we expect to see,
+	//use -1 as the second arg for debug mode
+	//  this tells the function to just find as many pieces as 
+	//   it can, and then it calls imshow to show the developer
+	//   which pieces were detected
+	// vector<compositeCircle> knownCircles = observePieces(filename,-1 );
 	vector<compositeCircle> knownCircles = observePieces(filename,numMovesPlayed+1 );
-	//vector<compositeCircle> knownCircles = observePieces(filename,-1 );
+
 
 
 
 	Point2f coords;
 	MoveType foundColor;
 	bool foundPiece = false;
+	//loop through each observed piece in knownCircles, and
+	//check to see whether or not the piece is new
 	for(unsigned int i = 0; i < knownCircles.size(); ++i){
 
 		double minDist = -1;
@@ -578,6 +646,9 @@ bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
 
 		for(int j = 0; j < GRID_LENGTH; ++j){
 			for(int t = 0; t < GRID_LENGTH; ++t){
+				//determine the distance from the center of the observed 
+				//piece to every space in the board
+				//store the min distance
 				double curDist = norm( board[j][t].loc - Point2f(knownCircles[i].circle[0],knownCircles[i].circle[1]));
 				if(minDist < 0 || curDist < minDist){
 					minDist = curDist;
@@ -587,14 +658,22 @@ bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
 				}
 			}
 		}
+
+		// if the space that this detected piece is closest to 
+		// is a blank space, then we know it is a new piece
 		if(board[minX][minY].owner == blank){
 
+			//check to see if the new piece that was found was a computer piece. If it is,
+			//something went wrong
 			if(knownCircles[i].color != PLAYER_COLOR){
 				cout << "computer was moved to the wrong spot, error " << endl; 
 				cout << " computer spot that we found is at location: " << minX << "," << minY << endl;	
 				return false;
 			}	
 
+			//check to see if we have already found a piece,
+			//if we did then we have spotted >1 new pieces placed and
+			//return false to indicate something went wrong
 			if(foundPiece ==true){
 				cout << "found more than one piece in populateBoard " << endl;
 				cout << "please make sure only one piece was played " << endl;
@@ -608,9 +687,13 @@ bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
 			coords.y = minY;
 			foundColor = knownCircles[i].color;
 
+
 			cout << "detected piece placed at " << minY << "," << minX << endl;
 		}	
 	}
+
+	//if we did find a new piece, then update the game state 
+	//with this new piece
 	if(foundPiece==true){
 		incrementNumMovesPlayed();
 		enemyMoves.push_back(Coordinate(coords.x,coords.y)); 
@@ -622,11 +705,11 @@ bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
 }
 
 bool Gomoku::withinRegion( Coordinate point, spot curSpot){
-return true;
+	return true;
 }
 
 bool Gomoku::isFree(Coordinate location){
-  cout << "checking location " << location.x << "," << location.y << endl;
-  return (board[location.x][location.y].owner == blank);  
+	cout << "checking location " << location.x << "," << location.y << endl;
+	return (board[location.x][location.y].owner == blank);  
 }
 

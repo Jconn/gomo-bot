@@ -453,6 +453,9 @@ void Threat::findChildThreats(int depth){
 }
 
 
+
+//pass in the player in the MoveType argument
+//TODO: JT make sure you call this for each player when we look for threats from other players
 void findInitThreats(Coordinate curMove, vector<Threat> &curThreats, spot board[GRID_LENGTH][GRID_LENGTH],MoveType player){
   //loop through the previous move, determine if there are any threats, make sure they are not 
   //threats that we already have,

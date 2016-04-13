@@ -21,18 +21,6 @@
 using namespace std;
 enum ThreatType{three=2, bthree=1,four=3,sfour=4,five=5,none=0 };
 
-/*
-   class ThreatTree{
-   vector<Threat*> totalThreats; 
-   vector<Threat> curThreats;  
-   ThreatTree(MoveType player);
-
-   void analyzeThreats(spot board[GRID_LENGTH][GRID_LENGTH],int layers);
-   Coordinate recommendMove();
-
-   };
-   */
-
 //assume the opponent can do all cost squares at once
 //proceed by first making gain move, and then apply all cost moves  
 class Threat {
@@ -46,6 +34,8 @@ class Threat {
     }
   public:
     void printThreat();
+    
+    //this is used to make sure we don't discover a threat more than once
     vector <Threat*> totalThreats;
     vector <Threat> children;
     ThreatType type;
