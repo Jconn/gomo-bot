@@ -21,23 +21,23 @@ int main(int argc, char** argv)
       );
   string filename = parser.get<string>("@image");
   if (!filename.empty())
-	{
-		cout << "in test mode " << endl;  
-		cout << "filename is  " << filename << endl;
-		observePieces(filename,-1);  
+  {
+    cout << "in test mode " << endl;  
+    cout << "filename is  " << filename << endl;
+    observePieces(filename,-1);  
   }
- 
-	// initialize the vector with empty coordinates
-	std::vector<Coordinate> unoccupied_spaces;
-	for(int i = 0; i < GRID_LENGTH; ++i) {
-		for(int j = 0; j < GRID_LENGTH; ++j) {
-			Coordinate a(i,j);
-			unoccupied_spaces.push_back(a);
-		}
-	}
+
+  // initialize the vector with empty coordinates
+  std::vector<Coordinate> unoccupied_spaces;
+  for(int i = 0; i < GRID_LENGTH; ++i) {
+    for(int j = 0; j < GRID_LENGTH; ++j) {
+      Coordinate a(i,j);
+      unoccupied_spaces.push_back(a);
+    }
+  }
 
   Coordinate mostRecentMove(0,0); // initialize mostRecentMove
-	cout << " creating game " << endl;
+  cout << " creating game " << endl;
   Gomoku game;
 
   cout << "entering game loop " << endl;
@@ -85,12 +85,16 @@ int main(int argc, char** argv)
     }
 
 
+    /*
+       mostRecentMove = game.getHumanMove(unoccupied_spaces);
+       game.printGameState();
+       if(game.winningMove(mostRecentMove)) {
+       std::cout << "a player wins!\n"; // TODO: update this
+       game.setGameEnded();
+       break;
+       }
 
-    //    mostRecentMove = game.getHumanMove(unoccupied_spaces);
-    //    game.printGameState();
-
-
-
+*/
     // check if game is ended 
     if(game.isEnded())
       game.setGameEnded();

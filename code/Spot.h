@@ -15,5 +15,5 @@ struct Spot{
   MoveType owner;
   Point2f loc;  
 };
-
+typedef Spot spot;
 #endif

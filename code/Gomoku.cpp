@@ -82,21 +82,16 @@ Coordinate Gomoku::getHumanMove(vector<Coordinate>& us) {
 	return coord;
 }
 
+
 Coordinate Gomoku::getAIMove(){
 	cout << " grabbing ai move " << endl;	
 	Coordinate curMove;
-<<<<<<< HEAD
-	if(myMode == randomAI){
-		assert(1);
-		//myMoves.push_back(getRandomAIMove(NULL)); // TODO: fix random
-=======
 
   //check what mode the AI has been set to in order to determine
   //our AI logic for finding a move
 	if(myMode ==randomAI){
 		assert(1); 
 		//myMoves.push_back(getRandomAIMove(NULL));
->>>>>>> origin/master
 		curMove = myMoves[myMoves.size()-1];
 	}
   else{
@@ -157,8 +152,8 @@ Coordinate Gomoku::getAIMove(){
   curMove = myMoves[myMoves.size()-1];
   setAIMove(curMove);
   
-	return curMove;
-}
+	return curMove;}
+
 
 void Gomoku::initializePlaybook(){
 	openingPlaybook.push_back(Coordinate(9,9));
@@ -209,32 +204,15 @@ void Gomoku::setAIMove(Coordinate &coord){
 	}
 	incrementNumMovesPlayed();
 }
-<<<<<<< HEAD
-potentialMove Gomoku::getDefense(){
-=======
 
-Coordinate Gomoku::getDefense(){
->>>>>>> 6a9a03ef3f2fd9c1c00e3a5942df7a3e2944be07
+potentialMove Gomoku::getDefense(){
 	//we have the board, loop through our spaces, and find threats that we have,
   //but at the start of our play, just follow the playbook
   //	cout << "enemyMoves size is " << enemyMoves.size() << endl;
 
   //check to see if we've made less than 2 moves, and if so, 
   //make a move based on the playbook
-<<<<<<< HEAD
  
-=======
-  if(myMoves.size() < 2){
-    cout << "going into opening playbook" << endl; 
-		for(unsigned int i = 0; i < openingPlaybook.size(); ++i){
-			if(isBlank(openingPlaybook[i])){
-				cout << "moving to " << openingPlaybook[i].x <<"," << openingPlaybook[i].y << endl; 
-				return openingPlaybook[i]; 
-			}
-		}
-	}
-
->>>>>>> 6a9a03ef3f2fd9c1c00e3a5942df7a3e2944be07
 	vector <Threat> threats;
 
 
@@ -252,10 +230,6 @@ Coordinate Gomoku::getDefense(){
 		}
 	}
 	Coordinate bestDef;
-<<<<<<< HEAD
-	//TODO: replace findBestMove with findBestDefense
-	if(threats.size() > 0){ 
-=======
 
   //after we've found the list of threats that the enemy has,
   //we use a heuristic to determine the most damaging threat
@@ -264,59 +238,28 @@ Coordinate Gomoku::getDefense(){
   //If we can't find a good defensive move to be made, 
   //then we call getAttack() to get the best attack move 
   if( threats.size() > 0){ 
-<<<<<<< HEAD
     return (findBestMove(threats));
-=======
->>>>>>> origin/master
-		if(findBestDefense(threats,bestDef))
-			return bestDef;
-		else
-			return getAttack();
->>>>>>> 6a9a03ef3f2fd9c1c00e3a5942df7a3e2944be07
 	}
 
   //if we couldn't spot any threats by enemy, just make an attack move
 	return getAttack();
 }
 
+
 potentialMove Gomoku::getAttack(){
 	//we have the board, loop through our spaces, and find threats that we have,
 	//but at the start of our play, just follow the playbook
-<<<<<<< HEAD
 
-=======
-	
 
-	// on the first call, populate myMoves from 
-	cout << "myMoves size is " << myMoves.size() << endl;
-	if(myMoves.size() < NUM_OPENING_PLAYBOOK_MOVES) {
-		cout << "going into opening playbook" << endl; 
-		for(unsigned int i = 0; i < openingPlaybook.size(); ++i){
-			if(isBlank(openingPlaybook[i])){
-				cout << "moving to " << openingPlaybook[i].x <<"," << openingPlaybook[i].y << endl; 
-				return openingPlaybook[i]; 
-			}
-		}
-	}
->>>>>>> 6a9a03ef3f2fd9c1c00e3a5942df7a3e2944be07
-
-<<<<<<< HEAD
-	vector<Threat> threats;
-=======
   //find initial threats that the computer can make
 	vector <Threat> threats;  
->>>>>>> origin/master
 	cout << "finding initial threats.. " << endl;
 	for(unsigned int i = 0; i < myMoves.size(); ++i){ 
 		findInitThreats(myMoves[i],threats,board,AI_COLOR);
 	}
-<<<<<<< HEAD
-	
-=======
 
   //if any threat sequence has been found to win for the computer,
   //then return that immediately
->>>>>>> origin/master
 	for(int i = 0; i < static_cast<int>(threats.size()); ++i){
 		if(threats[i].winningThreat){
 			return threats[i].returnMove();
@@ -333,6 +276,7 @@ potentialMove Gomoku::getAttack(){
 		threatPtrs.push_back(&(threats[i]));
 	}
 
+
 	cout <<"detected " << threats.size() << " initial threats " << endl;
   
   
@@ -343,7 +287,6 @@ potentialMove Gomoku::getAttack(){
 		threats[i].findChildThreats(5); 
 	}
 	cout << " finished child threats " << endl;
-	
 	int bestDepth = -1;
 	int bestIndex = -1;
 	
@@ -356,11 +299,10 @@ potentialMove Gomoku::getAttack(){
 			bestDepth = threats[i].winningDepth;
 		}
 	}
-	
 	if(bestIndex >=0)
 		return (threats[bestIndex]).returnMove();
 
-	if(threats.size() > 0) 
+	if( threats.size() > 0) 
 		return findBestMove(threats);
 	
   
@@ -392,10 +334,7 @@ potentialMove Gomoku::getAttack(){
   //we can make
   assert(threats.size());
   return findBestMove(threats);
-
 }
-
-
 
 vector <Threat> getThreats(){
 	//loop through our moves, call each move a "threat"
@@ -683,7 +622,6 @@ void Gomoku::printGameState() {
 
 // returns bool indicating whether or not human's piece was found
 bool Gomoku::populateBoard(string filename, Coordinate &enemyMove){
-<<<<<<< HEAD
 
 	//this function takes the path to a file name and returns two things:
 	//-boolean that indicates whether or not the number of pieces found
