@@ -7,7 +7,7 @@ CFLAGS = -g -Wall -Werror -std=c++11 $(OPENCV_FLAGS)
 
 default:	observe 
 ai:  main.cpp grid.cpp Gomoku.cpp Coordinate.cpp threats.cpp observepieces.cpp perspectivetransform.cpp UI.cpp
-	$(CC) $(CFLAGS) main.cpp grid.cpp Gomoku.cpp Coordinate.cpp threats.cpp observepieces.cpp perspectivetransform.cpp -o $@ $(LIBS) 
+	$(CC) $(CFLAGS) main.cpp grid.cpp Gomoku.cpp Coordinate.cpp threats.cpp observepieces.cpp -o $@ $(LIBS) 
 observe: observepieces.cpp
 	$(CC) $(CFLAGS) observepieces.cpp -o $@ $(LIBS)
 grid: hough_lines.cpp

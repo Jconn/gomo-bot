@@ -115,7 +115,7 @@ int populateGridEdges(string filename, spot (&board)[GRID_LENGTH][GRID_LENGTH])
 					for(int p = num2; p > 0; --p){
 						extrap.x = final_points[0].x;
 						extrap.y = final_points[0].y - p*100;
-            if(row>18) break;
+//            if(row>18) break;
             grid.at<Point2f>(col,row) = extrap;
 						row = row + 1;
 					}
@@ -162,11 +162,13 @@ int populateGridEdges(string filename, spot (&board)[GRID_LENGTH][GRID_LENGTH])
 			final_points.push_back(prev);
 		}
 	}
-  }
+	if(row >18) break;
+	if(col >18) break;
+	}
 
   for(int i = 0; i < grid.rows; i++){
     for(int j = 0; j<grid.cols; j++){
-      //      cout << "Column " << i << " Row " << j << " " << grid.at<Point2f>(i,j) << endl;
+            cout << "Column " << i << " Row " << j << " " << grid.at<Point2f>(i,j) << endl;
       board[i][j].loc = grid.at<Point2f>(i,j);	
     }
 

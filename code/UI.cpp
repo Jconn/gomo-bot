@@ -21,15 +21,15 @@ int UI(Mat &src, Coordinate coords, spot (&board)[GRID_LENGTH][GRID_LENGTH])
     Point2f pt(0,0);
     //get board locations from grid
     
-    int i = coords.x;
-    int j = coords.y;
+    int j = coords.x;
+    int i = coords.y;
     pt = board[i][j].loc;
     circle(src, Point(pt.x, pt.y), 32.0, Scalar( 0, 0, 255 ), 10, 8 );
     resize(src, dispImg, finalSize);
 		imshow("Image", dispImg);
     
     
-		waitkey(0);
+		waitKey(0);
 		return 0;
     
 }
