@@ -8,7 +8,7 @@
 #include <stdio.h>
 using namespace cv;
 using namespace std;
-static const Size finalSize(1200, 900);
+static const Size finalSize(600, 450);
 
 int UI(Mat &src, Coordinate coords, spot (&board)[GRID_LENGTH][GRID_LENGTH])
 {
@@ -24,12 +24,16 @@ int UI(Mat &src, Coordinate coords, spot (&board)[GRID_LENGTH][GRID_LENGTH])
     int j = coords.x;
     int i = coords.y;
     pt = board[i][j].loc;
+cout << "Coords: " << pt << endl;
     circle(src, Point(pt.x, pt.y), 32.0, Scalar( 0, 0, 255 ), 10, 8 );
     resize(src, dispImg, finalSize);
+		
 		imshow("Image", dispImg);
+    moveWindow("Image", 600, 500 );
     
-    
-		waitKey(0);
+		waitKey(1000);
+		destroyWindow("Image");
+		
 		return 0;
     
 }

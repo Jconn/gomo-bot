@@ -11,8 +11,7 @@ using namespace cv;
 using namespace std;
 using cv::CLAHE;
 
-
-struct spot{
+struct Spot{
   MoveType owner;
   Point2f loc;  
 };
