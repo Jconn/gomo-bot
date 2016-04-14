@@ -45,13 +45,17 @@ Threat::Threat(){
 }
 
 potentialMove Threat::returnMove(){
-  potentialMove newMove;
-  newMove.move = this->gainSquare;
-  newMove.isWinning = this->winningThreat;
-  newMove.depth = 180;
-  if(winningThreat)
-    newMove.depth = this->winningDepth;
-  return newMove;
+	potentialMove newMove;
+	newMove.move = this->gainSquare;
+	newMove.isWinning = this->winningThreat;
+	newMove.depth = 180;
+	if(winningThreat)
+		newMove.depth = this->winningDepth;
+	if(newMove.depth < 0){
+		printThreat();
+		assert(0);
+	} 
+	return newMove;
 }
 Threat::Threat(int x, int y, spot gameState[GRID_LENGTH][GRID_LENGTH])
 {
@@ -458,16 +462,21 @@ void Threat::findChildThreats(int depth){
   cout << " total children of this threat is " << children.size() << endl;
   cout << " current depth is " << depth << endl;
   for(unsigned i = 0; i < children.size(); ++i){ 
-    children[i].findChildThreats(depth-1);  
-  }
-  for(unsigned i = 0; i < children.size(); ++i){
-    if(children[i].winningThreat == true)
-      winningThreat = true;
-      winningDepth = children[i].winningDepth;
-  }
+		children[i].findChildThreats(depth-1);  
+	}
+	for(unsigned i = 0; i < children.size(); ++i){
+		if(children[i].winningThreat == true){
+			winningThreat = true;
+			winningDepth = children[i].winningDepth;
+			if(winningDepth < 0){
+				children[i].printThreat();
+				assert(0);
+
+
+			}
+		}
+	}
 }
-
-
 
 //pass in the player in the MoveType argument
 //TODO: JT make sure you call this for each player when we look for threats from other players

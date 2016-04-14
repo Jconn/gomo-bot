@@ -27,7 +27,8 @@ class Threat {
   private:
     void setWinning(){
       winningDepth = -1; 
-      if(type == five){
+      winningThreat = false;
+			if(type == five){
         winningThreat = true;
         winningDepth = layersDeep;
       }
@@ -41,8 +42,10 @@ class Threat {
         winningDepth = layersDeep + 1;
       }
       else
-        winningThreat = false;
-    }
+				winningThreat = false;
+			if(type!=sfour &&  type !=five && winningThreat)
+				assert(0);   
+		}
   public:
     void printThreat();
     
@@ -59,7 +62,7 @@ class Threat {
     potentialMove returnMove(); 
     Threat(ThreatType myType);
     Threat(int x, int y, spot gameState[GRID_LENGTH][GRID_LENGTH]);
-    bool winningThreat;
+    bool winningThreat = false;
     int winningDepth; 
     bool isNewThreat(Threat &discoveredThreat); 
     void findChildThreats(int depth);
