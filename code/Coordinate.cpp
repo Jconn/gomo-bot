@@ -1,15 +1,16 @@
 #include "Coordinate.h"
 #include "Constants.h"
 using namespace std;
+
 Coordinate::Coordinate(int a, int b) {
   x = a;
   y = b;
 }
+
 Coordinate::Coordinate() {
   x = -1; 
   y = -1; 
 }
-
 
 bool Coordinate::isValid() {
   if(x > GRID_LENGTH || y > GRID_LENGTH || x < 0 || y < 0)
@@ -18,8 +19,7 @@ bool Coordinate::isValid() {
     return true;
 }
 
-
-bool Coordinate::move(Direction moveDir, int numMoves,int mag){
+bool Coordinate::move(Direction moveDir, int numMoves, int mag){
   bool wasValid = true;
   //cout << "moving point...\n";
   //cout << "original point is " << x <<"," << y << endl; 
@@ -81,6 +81,7 @@ bool Coordinate::move(Direction moveDir, int numMoves,int mag){
 bool Coordinate::increment(Direction moveDir, int numMoves){
   return move(moveDir,numMoves,1);
 }
+
 bool Coordinate::decrement(Direction moveDir, int numMoves){
   return move(moveDir,numMoves,-1);
 }

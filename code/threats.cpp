@@ -230,7 +230,7 @@ void Threat::findChildThreats(int depth){
 
           freeSpaces.push_back(curLoc);
         }
-        if( curLoc==endLoc){
+        if(curLoc==endLoc){
           done = true;
           break;
         }
